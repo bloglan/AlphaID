@@ -1,15 +1,16 @@
 ﻿@using AlphaIdPlatform.Security
 @inject NaturalPersonManager UserManager
+@inject IOptions<ProductInfo> Product
 @{
     Layout = "/Pages/Shared/_Layout.cshtml";
     var person = await UserManager.GetUserAsync(User);
 }
 
-@section Heads{
+@section Heads {
     @await RenderSectionAsync("Heads", false)
 }
 
-@section Navbar{
+@section Navbar {
     @await RenderSectionAsync("Navbar", false)
 }
 
@@ -39,7 +40,10 @@
                             <a asp-page="/Account/Index" asp-path="/Settings/Account" class="list-group-item list-group-item-action d-flex align-items-center">@L["Account"]</a>
                             <a asp-page="/Authentication/Index" asp-path="/Settings/Authentication" class="list-group-item list-group-item-action d-flex align-items-center">@L["Password and authentication"]</a>
                             <a asp-page="/Organizations/Index" asp-path="/Settings/Organizations" class="list-group-item list-group-item-action d-flex align-items-center">@L["Organizations"]</a>
-                            <a asp-page="/RealName/Index" asp-path="/Settings/RealName" class="list-group-item list-group-item-action d-flex align-items-center">@L["Real-name Authentication"]</a>
+                            @if (Product.Value.Feature.RealName)
+                            {
+                                <a asp-page="/RealName/Index" asp-path="/Settings/RealName" class="list-group-item list-group-item-action d-flex align-items-center">@L["Real-name Authentication"]</a>
+                            }
                             @* <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">Billing &amp; Invoices</a> *@
                         </div>
                     </div>
@@ -54,6 +58,6 @@
     </div>
 </div>
 
-@section Scripts{
+@section Scripts {
     @await RenderSectionAsync("Scripts", false)
 }

@@ -132,4 +132,7 @@
 		<value>更新个人信息</value>
 		<comment>Update profile</comment>
 	</data>
+  <data name="Real-name authentication" xml:space="preserve">
+	  <value>实名认证</value>
+  </data>
 </root>

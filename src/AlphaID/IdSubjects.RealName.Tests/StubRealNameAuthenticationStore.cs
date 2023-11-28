@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IdSubjects.RealName.Tests;
+﻿namespace IdSubjects.RealName.Tests;
 internal class StubRealNameAuthenticationStore:IRealNameAuthenticationStore
 {
     private HashSet<RealNameAuthentication> set = new();

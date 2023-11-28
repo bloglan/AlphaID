@@ -1,6 +1,4 @@
 ﻿using IdSubjects.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IdSubjects.DirectoryLogon;

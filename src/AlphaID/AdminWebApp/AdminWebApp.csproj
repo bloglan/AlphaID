@@ -45,6 +45,9 @@
 	  <EmbeddedResource Update="Resources\Areas\RealName\Pages\Request\Index.zh-cn.resx">
 	    <DependentUpon>Index.resx</DependentUpon>
 	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\SystemSettings\Pages\Index.zh-cn.resx">
+	    <DependentUpon>Index.resx</DependentUpon>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ProjectExtensions>

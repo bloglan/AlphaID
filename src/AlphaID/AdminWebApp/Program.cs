@@ -7,7 +7,6 @@ using AlphaId.DirectoryLogon.EntityFramework;
 using AlphaId.EntityFramework;
 using AlphaId.EntityFramework.SecurityAuditing;
 using AlphaId.PlatformServices.Aliyun;
-using AlphaId.PlatformServices.Primitives;
 using AlphaIdPlatform;
 using AlphaIdPlatform.Debugging;
 using AlphaIdPlatform.Platform;
@@ -58,7 +57,7 @@ builder.Host.UseSerilog((context, configuration) =>
                 return false;
             })
             .WriteTo.MSSqlServer(
-                builder.Configuration.GetConnectionString("IDSubjectsDataConnection"),
+                builder.Configuration.GetConnectionString(nameof(IdSubjectsDbContext)),
                 sinkOptions: new MSSqlServerSinkOptions() { TableName = "AuditLog" },
                 columnOptions: new ColumnOptions()
                 {
@@ -72,7 +71,7 @@ builder.Host.UseSerilog((context, configuration) =>
     });
 });
 
-//ConfigServices
+//产品和系统URL信息。
 builder.Services.Configure<ProductInfo>(builder.Configuration.GetSection("ProductInfo"));
 builder.Services.Configure<SystemUrlInfo>(builder.Configuration.GetSection("SystemUrl"));
 
@@ -186,7 +185,7 @@ builder.Services.AddDbContext<PersistedGrantDbContext>(options =>
 
 builder.Services.AddDbContext<OperationalDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("OperationalDataConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(OperationalDbContext)));
 });
 
 //自然人管理器
@@ -195,24 +194,24 @@ idSubjectsBuilder
     .AddDefaultStores()
     .AddDbContext(options =>
     {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("IDSubjectsDataConnection"), sqlOptions =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(IdSubjectsDbContext)), sqlOptions =>
         {
             sqlOptions.UseNetTopologySuite();
         });
     });
 
-if (true)
+if (bool.Parse(builder.Configuration[FeatureSwitch.RealNameFeature] ?? "false"))
 {
     idSubjectsBuilder.AddRealName()
         .AddDefaultStores()
-        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString("IDSubjectsDataConnection")));
+        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(RealNameDbContext))));
 }
 
-if (true)
+if (bool.Parse(builder.Configuration[FeatureSwitch.DirectoryAccountManagementFeature] ?? "false"))
 {
     idSubjectsBuilder.AddDirectoryLogin()
         .AddDefaultStores()
-        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DirectoryLogonDataConnection")));
+        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(DirectoryLogonDbContext))));
 }
 
 //身份证OCR识别
@@ -227,14 +226,6 @@ builder.Services.AddScoped<LogonAccountManager>()
     .AddScoped<IQueryableLogonAccountStore, QueryableLogonAccountStore>()
     .AddScoped<IDirectoryServiceStore, DirectoryServiceStore>();
 
-//短信、短信验证码服务
-builder.Services.AddScoped<IShortMessageService, SimpleShortMessageService>();
-builder.Services.AddScoped<IVerificationCodeService, SimpleShortMessageService>();
-builder.Services.Configure<SimpleShortMessageServiceOptions>(options =>
-{
-    options.ClientId = "bbb867eb-f1e2-4deb-8a21-832f963b4a74";
-    options.ClientSecret = "XIKHAcDO6oVYIAQQs8cewfaJwGxVV5u5x-6Yi-lu";
-});
 
 //添加邮件发送器。
 builder.Services.AddScoped<IEmailSender, SmtpMailSender>()
@@ -270,7 +261,7 @@ builder.Services.AddAuditLog()
     .AddDefaultStore()
     .AddDbContext(options =>
     {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("IDSubjectsDataConnection"));
+        options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(IdSubjectsDbContext)));
     });
 
 var app = builder.Build();

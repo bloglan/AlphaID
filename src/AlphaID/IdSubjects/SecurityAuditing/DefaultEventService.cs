@@ -1,6 +1,5 @@
 ﻿using IdSubjects.DependencyInjection;
 using IdSubjects.SecurityAuditing.Events;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 

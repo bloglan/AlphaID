@@ -121,7 +121,7 @@
     <value>首页</value>
   </data>
   <data name="OpenID Connect" xml:space="preserve">
-    <value>OpenID Connect</value>
+	  <value>OpenID Connect协议</value>
   </data>
   <data name="Organizations" xml:space="preserve">
     <value>组织</value>
@@ -131,5 +131,8 @@
   </data>
   <data name="System Settings" xml:space="preserve">
     <value>系统设置</value>
+  </data>
+  <data name="Real Name" xml:space="preserve">
+	  <value>实名</value>
   </data>
 </root>

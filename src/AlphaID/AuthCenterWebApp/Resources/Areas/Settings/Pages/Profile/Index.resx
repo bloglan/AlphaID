@@ -132,4 +132,8 @@
   <data name="Update profile" xml:space="preserve">
     <value>Update profile</value>
   </data>
+  <data name="Real-name authentication" xml:space="preserve">
+	  <value>Real-name authentication</value>
+	  <comment>Real-name authentication</comment>
+  </data>
 </root>

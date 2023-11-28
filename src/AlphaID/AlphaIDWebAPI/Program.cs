@@ -2,16 +2,12 @@ using AlphaId.EntityFramework;
 using AlphaId.RealName.EntityFramework;
 using AlphaIdPlatform;
 using AlphaIdWebAPI;
-using AlphaIdWebAPI.Middlewares;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Options;
 using IdSubjects.RealName;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -103,10 +99,10 @@ builder.Services.AddAuthorization(options =>
     .RequireClaim("scope", "openid")
     .Build();
 
-    options.AddPolicy("RealNameScopeRequired", builder =>
+    options.AddPolicy("RealNameScopeRequired", policyBuilder =>
     {
-        builder.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
-        builder.RequireClaim("scope", "realname");
+        policyBuilder.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+        policyBuilder.RequireClaim("scope", "realname");
     });
 
 });
@@ -129,7 +125,7 @@ idSubjectsBuilder
         });
     });
 
-if (true)
+if (bool.Parse(builder.Configuration[FeatureSwitch.RealNameFeature] ?? "false"))
 {
     idSubjectsBuilder.AddRealName()
         .AddDefaultStores()
@@ -158,8 +154,6 @@ app.UseRouting();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-if (bool.Parse(builder.Configuration["ProtectSwagger"]!))
-    app.UseSwaggerAuthorized();
 app.UseSwagger(options =>
 {
     options.RouteTemplate = "docs/{documentName}/docs.json";

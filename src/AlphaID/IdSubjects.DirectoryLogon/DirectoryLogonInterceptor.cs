@@ -1,7 +1,6 @@
 ﻿using IdSubjects.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 
 namespace IdSubjects.DirectoryLogon;
 internal class DirectoryLogonInterceptor : NaturalPersonInterceptor

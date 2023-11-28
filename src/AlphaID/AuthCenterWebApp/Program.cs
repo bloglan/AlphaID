@@ -1,7 +1,6 @@
 ﻿using AlphaId.DirectoryLogon.EntityFramework;
 using AlphaId.EntityFramework;
 using AlphaId.PlatformServices.Aliyun;
-using AlphaId.PlatformServices.Primitives;
 using AlphaId.RealName.EntityFramework;
 using AlphaIdPlatform;
 using AlphaIdPlatform.Debugging;
@@ -55,7 +54,7 @@ builder.Host.UseSerilog((ctx, configuration) =>
                         return false;
                     })
                     .WriteTo.MSSqlServer(
-                        builder.Configuration.GetConnectionString("IDSubjectsDataConnection"),
+                        builder.Configuration.GetConnectionString(nameof(IdSubjectsDbContext)),
                         sinkOptions: new MSSqlServerSinkOptions() { TableName = "AuditLog" },
                         columnOptions: new ColumnOptions()
                         {
@@ -128,7 +127,7 @@ var idSubjectsBuilder = builder.Services.AddIdSubjectsIdentity(options =>
     .AddDefaultStores()
     .AddDbContext(options =>
     {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("IDSubjectsDataConnection"), sqlOptions =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(IdSubjectsDbContext)), sqlOptions =>
         {
             sqlOptions.UseNetTopologySuite();
         });
@@ -139,18 +138,18 @@ idSubjectsBuilder.IdentityBuilder
     .AddClaimsPrincipalFactory<PersonClaimsPrincipalFactory>()
     .AddDefaultTokenProviders();
 
-if (true) //todo 设置一个开关以决定是否启用实名认证模块
+if (bool.Parse(builder.Configuration[FeatureSwitch.RealNameFeature] ?? "false"))
 {
     idSubjectsBuilder.AddRealName()
         .AddDefaultStores()
-        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString("IDSubjectsDataConnection")));
+        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(RealNameDbContext))));
 }
 
-if (true)
+if (bool.Parse(builder.Configuration[FeatureSwitch.DirectoryAccountManagementFeature] ?? "false"))
 {
     idSubjectsBuilder.AddDirectoryLogin()
         .AddDefaultStores()
-        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString("IDSubjectsDataConnection")));
+        .AddDbContext(options => options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(DirectoryLogonDbContext))));
 }
 
 //添加邮件发送器。
@@ -193,14 +192,6 @@ builder.Services.AddIdentityServer(options =>
     .AddServerSideSessions<ServerSideSessionStore>()
     .Services.AddTransient<Duende.IdentityServer.Services.IEventSink, AuditLogEventSink>();
 
-//短信服务
-builder.Services.AddScoped<IShortMessageService, SimpleShortMessageService>();
-builder.Services.AddScoped<IVerificationCodeService, SimpleShortMessageService>();
-builder.Services.Configure<SimpleShortMessageServiceOptions>(options =>
-{
-    options.ClientId = "bbb867eb-f1e2-4deb-8a21-832f963b4a74";
-    options.ClientSecret = "XIKHAcDO6oVYIAQQs8cewfaJwGxVV5u5x-6Yi-lu";
-});
 
 builder.Services.AddScoped<ChinesePersonNamePinyinConverter>();
 builder.Services.AddScoped<ChinesePersonNameFactory>();

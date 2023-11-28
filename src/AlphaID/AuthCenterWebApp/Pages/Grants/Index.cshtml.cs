@@ -14,17 +14,17 @@ public class Index : PageModel
 {
     private readonly IIdentityServerInteractionService interaction;
     private readonly IClientStore clients;
-    private readonly IResourceStore resources;
+    private readonly IResourceStore resourceStore;
     private readonly IEventService events;
 
     public Index(IIdentityServerInteractionService interaction,
         IClientStore clients,
-        IResourceStore resources,
+        IResourceStore resourceStore,
         IEventService events)
     {
         this.interaction = interaction;
         this.clients = clients;
-        this.resources = resources;
+        this.resourceStore = resourceStore;
         this.events = events;
     }
 
@@ -40,7 +40,7 @@ public class Index : PageModel
             var client = await this.clients.FindClientByIdAsync(grant.ClientId);
             if (client != null)
             {
-                var resources = await this.resources.FindResourcesByScopeAsync(grant.Scopes);
+                var resources = await this.resourceStore.FindResourcesByScopeAsync(grant.Scopes);
 
                 var item = new GrantViewModel()
                 {

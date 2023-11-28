@@ -112,4 +112,8 @@
   <data name="System Settings" xml:space="preserve">
     <value>System Settings</value>
   </data>
+  <data name="Real Name" xml:space="preserve">
+	  <value>Real Name</value>
+	  <comment>Real Name</comment>
+  </data>
 </root>

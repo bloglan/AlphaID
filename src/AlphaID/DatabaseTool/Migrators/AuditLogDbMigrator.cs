@@ -1,10 +1,5 @@
 ﻿using AlphaId.EntityFramework.SecurityAuditing;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseTool.Migrators;
 internal class AuditLogDbMigrator:DatabaseMigrator

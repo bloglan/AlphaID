@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace IdSubjects.SecurityAuditing.Events;
+﻿namespace IdSubjects.SecurityAuditing.Events;
 internal class CreatePersonFailureEvent : AuditLogEvent
 {
     public CreatePersonFailureEvent()

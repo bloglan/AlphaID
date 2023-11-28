@@ -1,6 +1,4 @@
 using IdSubjects.SecurityAuditing;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AdminWebApp.Areas.SystemSettings.Pages.Security.Auditing
 {
