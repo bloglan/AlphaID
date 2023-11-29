@@ -99,10 +99,8 @@
   </resheader>
   <data name="Apply changes" xml:space="preserve">
 		<value>Apply changes</value>
-		<comment>Apply changes</comment>
 	</data>
   <data name="General" xml:space="preserve">
 		<value>General</value>
-		<comment>General</comment>
 	</data>
 </root>

@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
   <data name="Allowed access token signing algorithms" xml:space="preserve">
     <value>Allowed access token signing algorithms</value>
+  </data>
+  <data name="Bank" xml:space="preserve">
+    <value>Bank</value>
   </data>
   <data name="Client ID" xml:space="preserve">
     <value>Client ID</value>
@@ -191,7 +200,6 @@
   </data>
   <data name="Other" xml:space="preserve">
 	  <value>Other</value>
-	  <comment>Other</comment>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
@@ -235,6 +243,9 @@
   <data name="Surname" xml:space="preserve">
     <value>Surname</value>
   </data>
+  <data name="Taxpayer ID" xml:space="preserve">
+	  <value>Taxpayer ID</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Title</value>
   </data>
@@ -246,7 +257,6 @@
   </data>
   <data name="Unselected" xml:space="preserve">
 	  <value>Unselected</value>
-	  <comment>Unselected</comment>
   </data>
   <data name="UPN suffix" xml:space="preserve">
     <value>UPN suffix</value>
@@ -277,17 +287,5 @@
   </data>
   <data name="Verification code" xml:space="preserve">
     <value>Verification code</value>
-  </data>
-  <data name="Taxpayer ID" xml:space="preserve">
-	  <value>Taxpayer ID</value>
-  </data>
-  <data name="Bank" xml:space="preserve">
-    <value>Bank</value>
-  </data>
-  <data name="Account" xml:space="preserve">
-    <value>Account</value>
-  </data>
-  <data name="Address" xml:space="preserve">
-    <value>Address</value>
   </data>
 </root>

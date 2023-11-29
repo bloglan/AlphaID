@@ -99,14 +99,11 @@
   </resheader>
   <data name="AuthenticatedUser" xml:space="preserve">
 		<value>AuthenticatedUser</value>
-		<comment>AuthenticatedUser</comment>
 	</data>
   <data name="Private" xml:space="preserve">
 		<value>Private</value>
-		<comment>Private</comment>
 	</data>
   <data name="Public" xml:space="preserve">
 		<value>Public</value>
-		<comment>Public</comment>
 	</data>
 </root>

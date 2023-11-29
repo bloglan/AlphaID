@@ -99,11 +99,9 @@
   </resheader>
   <data name="Feedback" xml:space="preserve">
 	  <value>Feedback</value>
-	  <comment>Feedback</comment>
   </data>
   <data name="Profile &amp;amp; Account" xml:space="preserve">
 	  <value>Profile &amp;amp; Account</value>
-	  <comment>Profile &amp;amp; Account</comment>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>

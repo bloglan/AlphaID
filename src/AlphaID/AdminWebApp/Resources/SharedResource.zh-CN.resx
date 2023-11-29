@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Account" xml:space="preserve">
+    <value>账户</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>地址</value>
+  </data>
   <data name="Allowed access token signing algorithms" xml:space="preserve">
     <value>可用的 Access token 签名算法</value>
+  </data>
+  <data name="Bank" xml:space="preserve">
+    <value>银行</value>
   </data>
   <data name="Client ID" xml:space="preserve">
     <value>客户端ID</value>
@@ -234,6 +243,9 @@
   <data name="Surname" xml:space="preserve">
     <value>姓氏</value>
   </data>
+  <data name="Taxpayer ID" xml:space="preserve">
+	  <value>纳税人识别号</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>职务</value>
   </data>
@@ -275,17 +287,5 @@
   </data>
   <data name="Verification code" xml:space="preserve">
     <value>短信验证码</value>
-  </data>
-  <data name="Taxpayer ID" xml:space="preserve">
-	  <value>纳税人识别号</value>
-  </data>
-  <data name="Bank" xml:space="preserve">
-    <value>银行</value>
-  </data>
-  <data name="Account" xml:space="preserve">
-    <value>账户</value>
-  </data>
-  <data name="Address" xml:space="preserve">
-    <value>地址</value>
   </data>
 </root>
