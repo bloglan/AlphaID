@@ -5,7 +5,7 @@ namespace IdSubjects.Diagnostics;
 /// <summary>
 /// 提供一个具有默认行为的拦截器。如果你不想实现所有拦截方法，可以继承此拦截器然后重写所需的方法。
 /// </summary>
-public abstract class NaturalPersonInterceptor : INaturalPersonInterceptor
+public abstract class NaturalPersonUpdateInterceptor : INaturalPersonUpdateInterceptor
 {
     /// <summary>
     /// 
@@ -52,25 +52,5 @@ public abstract class NaturalPersonInterceptor : INaturalPersonInterceptor
         return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="personManager"></param>
-    /// <param name="person"></param>
-    /// <returns></returns>
-    public virtual Task<IdentityResult> PreDeleteAsync(NaturalPersonManager personManager, NaturalPerson person)
-    {
-        return Task.FromResult(IdentityResult.Success);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="personManager"></param>
-    /// <param name="person"></param>
-    /// <returns></returns>
-    public virtual Task PostDeleteAsync(NaturalPersonManager personManager, NaturalPerson person)
-    {
-        return Task.CompletedTask;
-    }
+    
 }

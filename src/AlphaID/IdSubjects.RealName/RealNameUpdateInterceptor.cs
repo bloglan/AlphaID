@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace IdSubjects.RealName;
 
-internal class RealNameInterceptor : NaturalPersonInterceptor
+internal class RealNameUpdateInterceptor : NaturalPersonUpdateInterceptor
 {
-    private readonly ILogger<RealNameInterceptor>? logger;
+    private readonly ILogger<RealNameUpdateInterceptor>? logger;
     private readonly IRealNameAuthenticationStore store;
 
-    public RealNameInterceptor(ILogger<RealNameInterceptor>? logger, IRealNameAuthenticationStore store)
+    public RealNameUpdateInterceptor(ILogger<RealNameUpdateInterceptor>? logger, IRealNameAuthenticationStore store)
     {
         this.logger = logger;
         this.store = store;
@@ -64,8 +64,4 @@ internal class RealNameInterceptor : NaturalPersonInterceptor
 
     }
 
-    public override async Task PostDeleteAsync(NaturalPersonManager personManager, NaturalPerson person)
-    {
-        await this.store.DeleteByPersonIdAsync(person.Id);
-    }
 }

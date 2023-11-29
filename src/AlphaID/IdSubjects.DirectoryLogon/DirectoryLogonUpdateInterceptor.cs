@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace IdSubjects.DirectoryLogon;
-internal class DirectoryLogonUpdateInterceptor : NaturalPersonUpdateInterceptor
+internal class DirectoryLogonInterceptor : NaturalPersonUpdateInterceptor
 {
-    private readonly ILogger<DirectoryLogonUpdateInterceptor>? logger;
+    private readonly ILogger<DirectoryLogonInterceptor>? logger;
 
-    public DirectoryLogonUpdateInterceptor(ILogger<DirectoryLogonUpdateInterceptor>? logger)
+    public DirectoryLogonInterceptor(ILogger<DirectoryLogonInterceptor>? logger)
     {
         this.logger = logger;
     }

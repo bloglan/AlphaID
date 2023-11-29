@@ -17,7 +17,7 @@ public static class IdSubjectsBuilderExtensions
     {
         builder.Services.TryAddScoped<DirectoryServiceManager>();
         builder.Services.TryAddScoped<LogonAccountManager>();
-        builder.AddInterceptor<DirectoryLogonInterceptor>();
+        builder.AddInterceptor<DirectoryLogonUpdateInterceptor>();
 
         var directoryLogonBuilder = new DirectoryLogonBuilder(builder.Services);
         return directoryLogonBuilder;

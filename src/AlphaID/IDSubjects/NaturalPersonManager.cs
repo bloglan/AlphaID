@@ -208,8 +208,8 @@ public class NaturalPersonManager : UserManager<NaturalPerson>
     {
         List<IdentityError> errors = new();
         bool passPreUpdate = true;
-        var stack = new Stack<INaturalPersonInterceptor>();
-        foreach (var interceptor in this.Interceptors.OfType<INaturalPersonInterceptor>())
+        var stack = new Stack<INaturalPersonUpdateInterceptor>();
+        foreach (var interceptor in this.Interceptors.OfType<INaturalPersonUpdateInterceptor>())
         {
             stack.Push(interceptor);
             var interceptResult = await interceptor.PreUpdateAsync(this, user);
@@ -247,14 +247,14 @@ public class NaturalPersonManager : UserManager<NaturalPerson>
     {
         bool passPreAction = true;
         List<IdentityError> errors = new();
-        Stack<INaturalPersonInterceptor> stack = new();
-        foreach (var inceptor in this.Interceptors.OfType<INaturalPersonInterceptor>())
+        Stack<INaturalPersonDeleteInterceptor> stack = new();
+        foreach (var interceptor in this.Interceptors.OfType<INaturalPersonDeleteInterceptor>())
         {
-            stack.Push(inceptor);
-            var inceptorResult = await inceptor.PreDeleteAsync(this, user);
-            if (!inceptorResult.Succeeded)
+            stack.Push(interceptor);
+            var interceptorResult = await interceptor.PreDeleteAsync(this, user);
+            if (!interceptorResult.Succeeded)
                 passPreAction = false;
-            errors.AddRange(inceptorResult.Errors);
+            errors.AddRange(interceptorResult.Errors);
         }
         if (!passPreAction)
             return IdentityResult.Failed(errors.ToArray());
