@@ -36,6 +36,42 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\Authentication.zh-cn.resx">
+	    <DependentUpon>Authentication.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\Authentications.zh-cn.resx">
+	    <DependentUpon>Authentications.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\Index.zh-cn.resx">
+	    <DependentUpon>Index.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\Request.zh-cn.resx">
+	    <DependentUpon>Request.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\Requests.zh-cn.resx">
+	    <DependentUpon>Requests.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\StartRequest\Index.zh-cn.resx">
+	    <DependentUpon>Index.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\StartRequest\WithChineseIdCard.zh-cn.resx">
+	    <DependentUpon>WithChineseIdCard.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\_ChineseIdCardDocumentPartial.zh-cn.resx">
+	    <DependentUpon>_ChineseIdCardDocumentPartial.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\_IdentityDocumentPartial.zh-cn.resx">
+	    <DependentUpon>_IdentityDocumentPartial.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\_RealNameAuthenticationListGroupItem.zh-cn.resx">
+	    <DependentUpon>_RealNameAuthenticationListGroupItem.resx</DependentUpon>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\_RealNameRequestListGroupItem.zh-cn.resx">
+	    <DependentUpon>_RealNameRequestListGroupItem.resx</DependentUpon>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="BotDetectSounds\Pronunciation_Mandarin_CN.bdsp">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
