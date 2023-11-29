@@ -154,4 +154,16 @@
   <data name="Unknown" xml:space="preserve">
 		<value>Unknown</value>
 	</data>
+  <data name="Are you sure you want to refuse this request?" xml:space="preserve">
+	  <value>Are you sure you want to refuse this request?</value>
+	  <comment>Are you sure you want to refuse this request?</comment>
+  </data>
+  <data name="Refuse" xml:space="preserve">
+	  <value>Refuse</value>
+	  <comment>Refuse</comment>
+  </data>
+  <data name="Accept" xml:space="preserve">
+	  <value>Accept</value>
+	  <comment>Accept</comment>
+  </data>
 </root>

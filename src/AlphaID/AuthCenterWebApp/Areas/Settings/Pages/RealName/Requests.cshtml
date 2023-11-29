@@ -20,7 +20,6 @@
                 ChineseIdCardRealNameRequest => L["Chinese ID Card Request"],
                 _ => L["Unknown"],
             };
-            var chineseIdCardRequest = request as ChineseIdCardRealNameRequest;
             <tr>
                 <td><a asp-page="Request" asp-route-id="@request.Id">@requestType</a></td>
                 <td>@request.Accepted</td>

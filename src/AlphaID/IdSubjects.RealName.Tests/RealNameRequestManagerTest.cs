@@ -5,7 +5,7 @@ using Xunit;
 namespace IdSubjects.RealName.Tests;
 public class RealNameRequestManagerTest : IClassFixture<ServiceProviderFixture>
 {
-    private ServiceProviderFixture serviceProvider;
+    private readonly ServiceProviderFixture serviceProvider;
 
     public RealNameRequestManagerTest(ServiceProviderFixture serviceProvider)
     {
@@ -24,7 +24,7 @@ public class RealNameRequestManagerTest : IClassFixture<ServiceProviderFixture>
         using var scope = this.serviceProvider.ScopeFactory.CreateScope();
         {
             var manager = scope.ServiceProvider.GetRequiredService<RealNameRequestManager>();
-            var result  = await manager.CreateAsync(person, request);
+            var result = await manager.CreateAsync(person, request);
 
             Assert.True(result.Succeeded);
             Assert.Equal(person.Id, request.PersonId);

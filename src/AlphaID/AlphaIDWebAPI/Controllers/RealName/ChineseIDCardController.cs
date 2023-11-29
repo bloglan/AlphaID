@@ -13,18 +13,11 @@ namespace AlphaIdWebAPI.Controllers.RealName;
 [Authorize("RealNameScopeRequired")]
 public class ChineseIdCardController : ControllerBase
 {
-    private readonly NaturalPersonManager personManager;
-    private readonly ILogger<ChineseIdCardController> logger;
-
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="personManager"></param>
-    /// <param name="logger"></param>
-    public ChineseIdCardController(NaturalPersonManager personManager, ILogger<ChineseIdCardController> logger)
+    public ChineseIdCardController()
     {
-        this.personManager = personManager;
-        this.logger = logger;
     }
 
     /// <summary>

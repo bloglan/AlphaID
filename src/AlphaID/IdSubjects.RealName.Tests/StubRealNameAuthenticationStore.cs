@@ -1,7 +1,7 @@
 ﻿namespace IdSubjects.RealName.Tests;
-internal class StubRealNameAuthenticationStore:IRealNameAuthenticationStore
+internal class StubRealNameAuthenticationStore : IRealNameAuthenticationStore
 {
-    private HashSet<RealNameAuthentication> set = new();
+    private readonly HashSet<RealNameAuthentication> set = new();
 
     public IQueryable<RealNameAuthentication> Authentications => this.set.AsQueryable();
     public Task<IdOperationResult> CreateAsync(RealNameAuthentication authentication)

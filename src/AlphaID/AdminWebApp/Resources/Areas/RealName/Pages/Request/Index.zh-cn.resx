@@ -69,4 +69,13 @@
   <data name="Unknown" xml:space="preserve">
 		<value>未知</value>
 	</data>
+	<data name="Accept" xml:space="preserve">
+		<value>同意</value>
+	</data>
+	<data name="Are you sure you want to refuse this request?" xml:space="preserve">
+		<value>您确实要拒绝此请求吗？</value>
+	</data>
+	<data name="Refuse" xml:space="preserve">
+		<value>拒绝</value>
+	</data>
 </root>

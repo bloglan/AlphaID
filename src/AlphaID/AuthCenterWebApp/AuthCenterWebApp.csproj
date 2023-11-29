@@ -40,6 +40,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Areas\Developer\Pages\Index.zh-cn.resx">
+	    <DependentUpon>Index.resx</DependentUpon>
+	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Areas\Settings\Pages\RealName\Authentication.zh-cn.resx">
 	    <DependentUpon>Authentication.resx</DependentUpon>
 	  </EmbeddedResource>

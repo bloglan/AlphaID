@@ -103,4 +103,16 @@
   <data name="Unknown" xml:space="preserve">
 		<value>Unknown</value>
 	</data>
+  <data name="Accepted" xml:space="preserve">
+	  <value>Accepted</value>
+	  <comment>Accepted</comment>
+  </data>
+  <data name="Refused" xml:space="preserve">
+	  <value>Refused</value>
+	  <comment>Refused</comment>
+  </data>
+  <data name="Pending" xml:space="preserve">
+	  <value>Pending</value>
+	  <comment>Pending</comment>
+  </data>
 </root>
