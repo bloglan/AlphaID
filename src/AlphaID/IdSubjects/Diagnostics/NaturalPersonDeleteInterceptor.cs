@@ -5,7 +5,7 @@ namespace IdSubjects.Diagnostics;
 /// <summary>
 /// 
 /// </summary>
-public class NaturalPersonDeleteInterceptor : INaturalPersonDeleteInterceptor
+public abstract class NaturalPersonDeleteInterceptor : INaturalPersonDeleteInterceptor
 {
     /// <summary>
     /// 
