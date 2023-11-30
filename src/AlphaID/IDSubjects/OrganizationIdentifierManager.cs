@@ -1,4 +1,6 @@
-﻿namespace IdSubjects;
+﻿using IdSubjects.Validators;
+
+namespace IdSubjects;
 
 /// <summary>
 /// 
