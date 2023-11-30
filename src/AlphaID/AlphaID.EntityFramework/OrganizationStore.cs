@@ -16,7 +16,7 @@ internal class OrganizationStore : IOrganizationStore
 
     public IEnumerable<GenericOrganization> FindByName(string name)
     {
-        return this.dbContext.Organizations.Where(o => o.Name == name).Take(10); //返回条目过多可能导致性能问题。
+        return this.dbContext.Organizations.Where(o => o.Name == name).Take(10); //todo 返回条目过多可能导致性能问题。
     }
 
     public async Task<IdOperationResult> CreateAsync(GenericOrganization organization)

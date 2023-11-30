@@ -477,15 +477,15 @@ public class NaturalPersonManager : UserManager<NaturalPerson>
     /// <param name="user"></param>
     /// <param name="tzName"></param>
     /// <returns></returns>
-    public virtual Task<IdentityResult> SetTimeZone(NaturalPerson user, string tzName)
+    public virtual async Task<IdentityResult> SetTimeZone(NaturalPerson user, string tzName)
     {
         if (TZConvert.KnownIanaTimeZoneNames.Any(p => p == tzName))
         {
             user.TimeZone = tzName;
-            //todo 更新持久化？
-            return Task.FromResult(IdentityResult.Success);
+            return await this.UpdateAsync(user);
         }
-        return Task.FromResult(IdentityResult.Failed(new IdentityError() { Code = "Invalid_TzInfo", Description = "Invalid time zone name." }));
+        this.Logger.LogDebug("给定的时区名称{TimeZoneString}不是有效的", tzName);
+        return IdentityResult.Failed(new IdentityError() { Code = "Invalid_TzInfo", Description = "Invalid time zone name." });
     }
 
     /// <summary>

@@ -52,10 +52,6 @@ namespace AuthCenterWebApp.Areas.Settings.Pages.Profile
             person.DateOfBirth = this.Input.DateOfBirth.HasValue ? DateOnly.FromDateTime(this.Input.DateOfBirth.Value) : null;
 
             this.Result = await this.personManager.UpdateAsync(person);
-            if (!this.Result.Succeeded)
-            {
-                //todo log
-            }
             return this.Page();
         }
 

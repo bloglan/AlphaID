@@ -62,16 +62,33 @@ public class OrganizationMemberManager
     }
 
     /// <summary>
-    /// 
+    /// 以访问者visitor的视角检索指定用户的组织成员身份。
     /// </summary>
-    /// <param name="person"></param>
-    /// <param name="visitor">The person who access this system, null if anonymous access.</param>
+    /// <remarks>
+    /// <para>
+    /// 如果
+    /// </para>
+    /// </remarks>
+    /// <param name="person">要检索组织成员身份的目标用户。</param>
+    /// <param name="visitor">访问者。如果传入null，代表匿名访问者。</param>
     /// <returns></returns>
-    public Task<IEnumerable<OrganizationMember>> GetVisibleMembersOfAsync(NaturalPerson person, NaturalPerson? visitor)
+    public IEnumerable<OrganizationMember> GetVisibleMembersOf(NaturalPerson person, NaturalPerson? visitor)
     {
-        //todo 该方法行为有误，要重新考虑。
+        //获取目标person的所有组织身份。
         var members = this.store.OrganizationMembers.Where(p => p.PersonId == person.Id);
         Debug.Assert(members != null);
+
+        if (visitor == null)
+            return members.Where(m => m.Visibility == MembershipVisibility.Public);
+
+        //获取访问者的所属组织Id列表。
+        var visitorMemberOfOrgIds = this.store.OrganizationMembers.Where(m => m.PersonId == visitor.Id).Select(m => m.OrganizationId).ToList();
+
+        return members.Where(m =>
+            m.Visibility >= MembershipVisibility.AuthenticatedUser || (m.Visibility == MembershipVisibility.Private &&
+                                                                       visitorMemberOfOrgIds
+                                                                           .Contains(m.OrganizationId)));
+
         var visibilityLevel = MembershipVisibility.Public;
         if (visitor != null)
         {
@@ -79,7 +96,7 @@ public class OrganizationMemberManager
             if (members.Any(m => m.PersonId == visitor.Id))
                 visibilityLevel = MembershipVisibility.Private; //Visitor is a member of the organization.
         }
-        return Task.FromResult(members.Where(m => m.Visibility >= visibilityLevel).AsEnumerable());
+        return members.Where(m => m.Visibility >= visibilityLevel).AsEnumerable();
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using IdSubjects;
 using IdSubjects.Invitations;
+using Microsoft.EntityFrameworkCore;
 
 namespace AlphaId.EntityFramework;
 public class JoinOrganizationInvitationStore : IJoinOrganizationInvitationStore
@@ -21,7 +22,14 @@ public class JoinOrganizationInvitationStore : IJoinOrganizationInvitationStore
 
     public async Task<IdOperationResult> UpdateAsync(JoinOrganizationInvitation invitation)
     {
-        //todo 是否要考虑attach或者其他操作以避免外来对象无法正确更新到数据库。
+        if (this.dbContext.Entry(invitation).State == EntityState.Detached)
+        {
+            var origin = await this.dbContext.JoinOrganizationInvitations.FindAsync(invitation.Id);
+            if (origin != null)
+            {
+                this.dbContext.Entry(origin).CurrentValues.SetValues(invitation);
+            }
+        }
         await this.dbContext.SaveChangesAsync();
         return IdOperationResult.Success;
     }
