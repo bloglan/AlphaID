@@ -43,10 +43,19 @@ public class RealNameManagerTest : IClassFixture<ServiceProviderFixture>
         Assert.Equal("张三", person.PersonName.FullName);
     }
 
-    [Fact(Skip = "由于引用问题无法完成此测试，需改进测试方案。")]
+    [Fact]
     public async Task CannotChangeNameWhenRealNameAuthenticationExists()
     {
         var person = new NaturalPerson("zhangsan", new PersonNameInfo("张小三"));
+        
+
+        using var scope = this.serviceProvider.ScopeFactory.CreateScope();
+        var personManager = scope.ServiceProvider.GetRequiredService<NaturalPersonManager>();
+        await personManager.CreateAsync(person);
+
+        var target = (await personManager.FindByIdAsync(person.Id))!;
+
+        var realManager = scope.ServiceProvider.GetRequiredService<RealNameManager>();
         var authentication = new DocumentedRealNameAuthentication(
             new ChineseIdCardDocument()
             {
@@ -62,17 +71,11 @@ public class RealNameManagerTest : IClassFixture<ServiceProviderFixture>
             new("张三", "张", "三"),
             DateTimeOffset.UtcNow,
             "Test validator");
+        await realManager.AuthenticateAsync(target, authentication);
 
-        using var scope = this.serviceProvider.ScopeFactory.CreateScope();
-        var personManager = scope.ServiceProvider.GetRequiredService<NaturalPersonManager>();
-        await personManager.CreateAsync(person);
 
-        var realManager = scope.ServiceProvider.GetRequiredService<RealNameManager>();
-        await realManager.AuthenticateAsync(person, authentication);
-
-        person.PersonName = new("张三三");
-        var result = await personManager.UpdateAsync(person);
+        target.PersonName = new("张三三");
+        var result = await personManager.UpdateAsync(target);
         Assert.False(result.Succeeded);
-        Assert.Equal("张三", person.PersonName.FullName);
     }
 }

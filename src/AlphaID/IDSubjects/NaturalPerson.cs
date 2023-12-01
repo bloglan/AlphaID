@@ -20,7 +20,6 @@ public class NaturalPerson
     /// </summary>
     protected NaturalPerson()
     {
-        this.Id = Guid.NewGuid().ToString();
     }
 
     /// <summary>
@@ -41,7 +40,7 @@ public class NaturalPerson
     /// </summary>
     [Key]
     [MaxLength(50), Unicode(false)]
-    public string Id { get; protected set; }
+    public string Id { get; protected set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// User Name

@@ -83,6 +83,8 @@ public abstract class NaturalPersonStoreBase : INaturalPersonStore
     /// <returns></returns>
     public abstract Task<NaturalPerson?> FindByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken);
 
+    public abstract Task<NaturalPerson?> GetOriginalAsync(NaturalPerson person, CancellationToken cancellationToken);
+
     /// <summary>
     /// 
     /// </summary>

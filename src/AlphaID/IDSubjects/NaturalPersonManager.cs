@@ -117,9 +117,9 @@ public class NaturalPersonManager : UserManager<NaturalPerson>
     /// </summary>
     /// <param name="current"></param>
     /// <returns></returns>
-    public virtual Task<NaturalPerson> GetOriginalAsync(NaturalPerson current)
+    public virtual async Task<NaturalPerson?> GetOriginalAsync(NaturalPerson current)
     {
-        return Task.FromResult(this.Store.Users.Single(p => p.Id == current.Id));
+        return await this.Store.GetOriginalAsync(current, CancellationToken.None);
     }
 
     /// <summary>

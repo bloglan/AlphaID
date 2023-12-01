@@ -40,15 +40,18 @@ internal class RealNameUpdateInterceptor : NaturalPersonUpdateInterceptor
 
         //检查是否有对PersonName等作出的更改。
         var origin = await personManager.GetOriginalAsync(person);
-        if (!origin.PersonName.Equals(person.PersonName))
+        if (origin != null)
         {
-            this.logger?.LogDebug("自然人名称不相等。原始 {origin}，传入 {incoming}。", origin.PersonName, person.PersonName);
-            errors.Add(new IdentityError() { Code = "CannotEditPersonName", Description = "Cannot change person name when realname passed." });
+            if (!origin.PersonName.Equals(person.PersonName))
+            {
+                this.logger?.LogDebug("自然人名称不相等。原始 {origin}，传入 {incoming}。", origin.PersonName, person.PersonName);
+                errors.Add(new IdentityError() { Code = "CannotEditPersonName", Description = "Cannot change person name when realname passed." });
+            }
+            if (origin.DateOfBirth != person.DateOfBirth)
+                errors.Add(new IdentityError() { Code = "CannotEditBirthDate", Description = "Cannot change birth date when realname passed." });
+            if (origin.Gender != person.Gender)
+                errors.Add(new IdentityError() { Code = "CannotEditGender", Description = "Cannot change gender when realname passed." });
         }
-        if (origin.DateOfBirth != person.DateOfBirth)
-            errors.Add(new IdentityError() { Code = "CannotEditBirthDate", Description = "Cannot change birth date when realname passed." });
-        if (origin.Gender != person.Gender)
-            errors.Add(new IdentityError() { Code = "CannotEditGender", Description = "Cannot change gender when realname passed." });
 
         return errors.Any() ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
     }
