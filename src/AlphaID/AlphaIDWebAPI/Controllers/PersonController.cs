@@ -15,55 +15,14 @@ namespace AlphaIdWebAPI.Controllers;
 public class PersonController : ControllerBase
 {
     private readonly NaturalPersonManager personManager;
-    private readonly OrganizationMemberManager organizationMemberManager;
 
     /// <summary>
     /// Init Person Controller.
     /// </summary>
     /// <param name="personManager"></param>
-    /// <param name="organizationMemberManager"></param>
-    public PersonController(NaturalPersonManager personManager, OrganizationMemberManager organizationMemberManager)
+    public PersonController(NaturalPersonManager personManager)
     {
         this.personManager = personManager;
-        this.organizationMemberManager = organizationMemberManager;
-    }
-
-    /// <summary>
-    /// Get people base information by ID.
-    /// </summary>
-    /// <param name="id">Subject ID</param>
-    /// <returns></returns>
-    /// <response code="200">Base info of person.</response>
-    /// <response code="204">Person not found.</response>
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PersonModel?>> GetAsync(string id)
-    {
-        var person = await this.personManager.FindByIdAsync(id);
-        if (person == null)
-        {
-            return this.NotFound();
-        }
-        var members = await this.organizationMemberManager.GetMembersOfAsync(person);
-        return new PersonModel(person, members: members);
-    }
-
-    /// <summary>
-    /// 获取自然人所隶属的组织。
-    /// </summary>
-    /// <param name="id">自然人的SubjectId</param>
-    /// <returns></returns>
-    [HttpGet("{id}/MembersOf")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IEnumerable<OrganizationMemberModel>> MemberOfAsync(string id)
-    {
-        var person = await this.personManager.FindByIdAsync(id);
-        if (person == null)
-            return Enumerable.Empty<OrganizationMemberModel>();
-
-        var members = await this.organizationMemberManager.GetMembersOfAsync(person);
-        return from member in members select new OrganizationMemberModel(member);
     }
 
     /// <summary>
@@ -72,8 +31,12 @@ public class PersonController : ControllerBase
     /// <param name="keywords">关键词。可以通过手机号码、姓名汉字、姓名全拼</param>
     /// <returns>Return matched peoples, up to 50 records.</returns>
     [HttpGet("Search/{keywords}")]
-    public async Task<PersonSearchResult> SearchAsync(string keywords)
+    public async Task<ActionResult<PersonSearchResult>> SearchAsync(string keywords)
     {
+        var callClientId = this.User.ClientId();
+        if (callClientId == null)
+            return this.Forbid("Invalid client.");
+
         if (string.IsNullOrWhiteSpace(keywords))
         {
             return new PersonSearchResult(Enumerable.Empty<PersonModel>());
@@ -91,6 +54,7 @@ public class PersonController : ControllerBase
 
             return new PersonSearchResult(new PersonModel[] { new(result) });
         }
+        //todo 根据调用者ID来生成结对SubjectId.
 
         var pinyinSearchSet = this.personManager.Users.Where(p => p.PersonName.SearchHint!.StartsWith(keywords)).OrderBy(p => p.PersonName.SearchHint!.Length).ThenBy(p => p.PersonName.SearchHint);
         var pinyinSearchSetCount = pinyinSearchSet.Count();
@@ -105,7 +69,7 @@ public class PersonController : ControllerBase
         var final = new List<PersonModel>();
         foreach (var person in searchResults)
         {
-            final.Add(new PersonModel(person, false));
+            final.Add(new PersonModel(person));
         }
 
         return new PersonSearchResult(final, pinyinSearchSetCount > 30 || nameSearchSetCount > 30);

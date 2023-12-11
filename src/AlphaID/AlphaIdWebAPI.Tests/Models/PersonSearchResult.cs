@@ -1,6 +1,5 @@
 ﻿namespace AlphaIdWebAPI.Tests.Models;
 
-internal record PersonSearchResult(bool More)
+internal record PersonSearchResult(IEnumerable<PersonModel> Persons, bool More)
 {
-    public IEnumerable<PersonModel> Persons { get; set; } = default!;
 }
