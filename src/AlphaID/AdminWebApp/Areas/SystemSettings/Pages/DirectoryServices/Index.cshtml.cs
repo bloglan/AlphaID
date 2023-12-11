@@ -11,7 +11,7 @@ public class IndexModel : PageModel
         this.directoryServiceManager = directoryServiceManager;
     }
 
-    public IEnumerable<DirectoryService> DirectoryServices { get; set; } = default!;
+    public IEnumerable<IdSubjects.DirectoryLogon.DirectoryServiceDescriptor> DirectoryServices { get; set; } = default!;
 
     public void OnGet()
     {

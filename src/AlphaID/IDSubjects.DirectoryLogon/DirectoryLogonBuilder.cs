@@ -27,9 +27,9 @@ public class DirectoryLogonBuilder
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public DirectoryLogonBuilder AddDirectoryServiceStore<T>() where T : class, IDirectoryServiceStore
+    public DirectoryLogonBuilder AddDirectoryServiceStore<T>() where T : class, IDirectoryServiceDescriptorStore
     {
-        this.Services.TryAddScoped<IDirectoryServiceStore, T>();
+        this.Services.TryAddScoped<IDirectoryServiceDescriptorStore, T>();
         return this;
     }
 
@@ -38,9 +38,9 @@ public class DirectoryLogonBuilder
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public DirectoryLogonBuilder AddLogonAccountStore<T>() where T : class, ILogonAccountStore
+    public DirectoryLogonBuilder AddLogonAccountStore<T>() where T : class, IDirectoryAccountStore
     {
-        this.Services.TryAddScoped<ILogonAccountStore, T>();
+        this.Services.TryAddScoped<IDirectoryAccountStore, T>();
         return this;
     }
 }

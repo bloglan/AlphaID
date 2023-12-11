@@ -8,17 +8,17 @@ namespace AdminWebApp.Areas.People.Pages.Detail.Account;
 public class CreateDirectoryAccountModel : PageModel
 {
     private readonly DirectoryServiceManager directoryServiceManager;
-    private readonly LogonAccountManager logonAccountManager;
+    private readonly DirectoryAccountManager directoryAccountManager;
     private readonly NaturalPersonManager naturalPersonManager;
 
-    public CreateDirectoryAccountModel(DirectoryServiceManager directoryServiceManager, LogonAccountManager logonAccountManager, NaturalPersonManager naturalPersonManager)
+    public CreateDirectoryAccountModel(DirectoryServiceManager directoryServiceManager, DirectoryAccountManager directoryAccountManager, NaturalPersonManager naturalPersonManager)
     {
         this.directoryServiceManager = directoryServiceManager;
-        this.logonAccountManager = logonAccountManager;
+        this.directoryAccountManager = directoryAccountManager;
         this.naturalPersonManager = naturalPersonManager;
     }
 
-    public IEnumerable<DirectoryService> DirectoryServices => this.directoryServiceManager.Services;
+    public IEnumerable<DirectoryServiceDescriptor> DirectoryServices => this.directoryServiceManager.Services;
 
     [BindProperty]
     public InputModel Input { get; set; } = default!;
@@ -56,29 +56,17 @@ public class CreateDirectoryAccountModel : PageModel
         if (person == null)
             return this.NotFound();
 
-        if (!this.ModelState.IsValid)
-            return this.Page();
-
-        var directoryService = this.directoryServiceManager.FindByIdAsync(this.Input.ServiceId);
+        var directoryService = await this.directoryServiceManager.FindByIdAsync(this.Input.ServiceId);
         if (directoryService == null)
             this.ModelState.AddModelError("", "请选择一个目录服务");
 
-        CreateAccountRequest request = new()
-        {
-            AccountName = this.Input.EntryName,
-            SamAccountName = this.Input.SamAccountName,
-            UpnLeftPart = this.Input.UpnPart,
-            DisplayName = this.Input.DisplayName,
-            Surname = this.Input.Surname,
-            GivenName = this.Input.GivenName,
-            Email = this.Input.Email,
-            E164Mobile = this.Input.Mobile,
-            ServiceId = this.Input.ServiceId,
-            InitPassword = this.Input.NewPassword,
-        };
+        if (!this.ModelState.IsValid)
+            return this.Page();
+
         try
         {
-            await this.logonAccountManager.CreateAsync(person, request);
+            var logonAccount = new DirectoryAccount(directoryService!, person.Id);
+            await this.directoryAccountManager.CreateAsync(this.naturalPersonManager, logonAccount);
             return this.RedirectToPage("DirectoryAccounts", new { anchor });
         }
         catch (Exception ex)

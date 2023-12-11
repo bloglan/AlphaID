@@ -115,4 +115,7 @@
   <data name="Your organizations" xml:space="preserve">
     <value>您的组织</value>
   </data>
+  <data name="New organization" xml:space="preserve">
+	  <value>创建新的组织</value>
+  </data>
 </root>

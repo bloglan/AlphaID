@@ -8,29 +8,6 @@ namespace IdSubjects.Diagnostics;
 public abstract class NaturalPersonUpdateInterceptor : INaturalPersonUpdateInterceptor
 {
     /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="personManager"></param>
-    /// <param name="person"></param>
-    /// <returns></returns>
-    public virtual Task<IdentityResult> PreCreateAsync(NaturalPersonManager personManager, NaturalPerson person)
-    {
-        return Task.FromResult(IdentityResult.Success);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="personManager"></param>
-    /// <param name="person"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public virtual Task PostCreateAsync(NaturalPersonManager personManager, NaturalPerson person)
-    {
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
     /// 在更新NaturalPerson前调用。
     /// </summary>
     /// <param name="personManager"></param>

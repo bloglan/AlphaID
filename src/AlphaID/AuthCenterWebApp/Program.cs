@@ -13,6 +13,7 @@ using BotDetect.Web;
 using Duende.IdentityServer.EntityFramework.Stores;
 using IdSubjects;
 using IdSubjects.ChineseName;
+using IdSubjects.DependencyInjection;
 using IdSubjects.DirectoryLogon;
 using IdSubjects.RealName;
 using Microsoft.AspNetCore.Authorization;
@@ -113,17 +114,8 @@ builder.Services.AddRazorPages(options =>
     options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResource));
 });
 
-
-var idSubjectsBuilder = builder.Services.AddIdSubjectsIdentity(options =>
-{
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz0123456789.-_@";
-    options.User.RequireUniqueEmail = true;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 8;
-    options.Password.ChangePasswordColdDown = 5;
-    options.Password.EnablePassExpires = true;
-    options.Password.RememberPasswordHistory = 1;
-})
+builder.Services.Configure<IdSubjectsOptions>(builder.Configuration.GetSection("IdSubjectsOptions"));
+var idSubjectsBuilder = builder.Services.AddIdSubjectsIdentity()
     .AddDefaultStores()
     .AddDbContext(options =>
     {

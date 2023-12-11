@@ -129,6 +129,9 @@
   <data name="Bank" xml:space="preserve">
     <value>银行</value>
   </data>
+  <data name="Bio" xml:space="preserve">
+	  <value>个性签名</value>
+  </data>
   <data name="Birth date" xml:space="preserve">
     <value>生日</value>
   </data>
@@ -219,6 +222,9 @@
   <data name="Representative" xml:space="preserve">
     <value>责任人</value>
   </data>
+  <data name="Short description about yourself." xml:space="preserve">
+	  <value>您自己的简短描述。</value>
+  </data>
   <data name="Surname" xml:space="preserve">
     <value>姓氏</value>
   </data>
@@ -251,5 +257,11 @@
   </data>
   <data name="Verification code" xml:space="preserve">
     <value>短信验证码</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+	  <value>个人主页</value>
+  </data>
+  <data name="Your personal website." xml:space="preserve">
+	  <value>您的个人主页。</value>
   </data>
 </root>

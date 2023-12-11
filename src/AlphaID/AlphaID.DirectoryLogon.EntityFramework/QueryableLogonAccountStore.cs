@@ -11,9 +11,9 @@ public class QueryableLogonAccountStore : IQueryableLogonAccountStore
         this.dbContext = dbContext;
     }
 
-    public IQueryable<LogonAccount> LogonAccounts => this.dbContext.LogonAccounts;
+    public IQueryable<DirectoryAccount> LogonAccounts => this.dbContext.LogonAccounts;
 
-    public async Task<LogonAccount?> FindByLogonIdAsync(string logonId)
+    public async Task<DirectoryAccount?> FindByLogonIdAsync(string logonId)
     {
         return await this.dbContext.LogonAccounts.FindAsync(logonId);
     }

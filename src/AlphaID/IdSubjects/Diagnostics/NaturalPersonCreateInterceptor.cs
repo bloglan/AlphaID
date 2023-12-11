@@ -12,8 +12,10 @@ public abstract class NaturalPersonCreateInterceptor : INaturalPersonCreateInter
     /// </summary>
     /// <param name="personManager"></param>
     /// <param name="person"></param>
+    /// <param name="password"></param>
     /// <returns></returns>
-    public virtual Task<IdentityResult> PreCreateAsync(NaturalPersonManager personManager, NaturalPerson person)
+    public virtual Task<IdentityResult> PreCreateAsync(NaturalPersonManager personManager, NaturalPerson person,
+        string? password = null)
     {
         return Task.FromResult(IdentityResult.Success);
     }

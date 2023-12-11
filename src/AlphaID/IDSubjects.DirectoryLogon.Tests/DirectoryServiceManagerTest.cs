@@ -1,14 +1,25 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace IdSubjects.DirectoryLogon.Tests;
 
+[Collection(nameof(ServiceProviderCollection))]
 public class DirectoryServiceManagerTest
 {
-    [Fact(Skip = "≤ªæﬂ±∏ø…≤‚ ‘–‘")]
+    readonly ServiceProviderFixture serviceProvider;
+
+    public DirectoryServiceManagerTest(ServiceProviderFixture serviceProvider)
+    {
+        this.serviceProvider = serviceProvider;
+    }
+
+    [Fact(Skip = "‰∏çÂÖ∑Â§áÂèØÊµãËØïÊÄß")]
     public async void CreateDirectoryService()
     {
-        var store = new StubDirectoryServiceStore();
-        var manager = new DirectoryServiceManager(store);
+        var store = new StubDirectoryServiceDescriptorStore();
+        using var scope = this.serviceProvider.ScopeFactory.CreateScope();
+        var manager = scope.ServiceProvider.GetRequiredService<DirectoryServiceManager>();
 
-        var directoryService = new DirectoryService()
+        var directoryService = new DirectoryServiceDescriptor()
         {
             ServerAddress = "localhost",
             RootDn = "DC=qjyc,DC=cn",

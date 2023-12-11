@@ -129,6 +129,9 @@
   <data name="Bank" xml:space="preserve">
     <value>Bank</value>
   </data>
+  <data name="Bio" xml:space="preserve">
+	  <value>Bio</value>
+  </data>
   <data name="Birth date" xml:space="preserve">
     <value>Birth date</value>
   </data>
@@ -219,6 +222,9 @@
   <data name="Representative" xml:space="preserve">
     <value>Representative</value>
   </data>
+  <data name="Short description about yourself." xml:space="preserve">
+	  <value>Short description about yourself.</value>
+  </data>
   <data name="Surname" xml:space="preserve">
     <value>Surname</value>
   </data>
@@ -251,5 +257,11 @@
   </data>
   <data name="Verification code" xml:space="preserve">
     <value>Verification code</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+	  <value>Website</value>
+  </data>
+  <data name="Your personal website." xml:space="preserve">
+	  <value>Your personal website.</value>
   </data>
 </root>

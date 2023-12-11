@@ -48,6 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Migrations\DirectoryLogonDb\" />
 		<Folder Include="Migrations\IdSubjectsDb\" />
 		<Folder Include="Migrations\RealNameDb\" />
 		<Folder Include="TestingData\AdminWebAppData\" />

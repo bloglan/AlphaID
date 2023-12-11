@@ -7,17 +7,17 @@ namespace AdminWebApp.Areas.People.Pages.Detail.Account;
 public class BindDirectoryAccountModel : PageModel
 {
     private readonly NaturalPersonManager personManager;
-    private readonly LogonAccountManager logonAccountManager;
+    private readonly DirectoryAccountManager directoryAccountManager;
     private readonly DirectoryServiceManager directoryServiceManager;
 
-    public BindDirectoryAccountModel(NaturalPersonManager personManager, LogonAccountManager logonAccountManager, DirectoryServiceManager directoryServiceManager)
+    public BindDirectoryAccountModel(NaturalPersonManager personManager, DirectoryAccountManager directoryAccountManager, DirectoryServiceManager directoryServiceManager)
     {
         this.personManager = personManager;
-        this.logonAccountManager = logonAccountManager;
+        this.directoryAccountManager = directoryAccountManager;
         this.directoryServiceManager = directoryServiceManager;
     }
 
-    public IEnumerable<DirectoryService> DirectoryServices => this.directoryServiceManager.Services;
+    public IEnumerable<DirectoryServiceDescriptor> DirectoryServices => this.directoryServiceManager.Services;
 
     public NaturalPerson Person { get; set; } = default!;
 
@@ -43,7 +43,7 @@ public class BindDirectoryAccountModel : PageModel
         if (directoryService == null)
             return this.Page();
 
-        this.SearchItems = this.logonAccountManager.Search(directoryService, $"(anr={keywords})");
+        this.SearchItems = this.directoryAccountManager.Search(directoryService, $"(anr={keywords})");
         return this.Page();
     }
 
@@ -57,8 +57,8 @@ public class BindDirectoryAccountModel : PageModel
         var directoryService = await this.directoryServiceManager.FindByIdAsync(serviceId);
         if (directoryService == null)
             return this.Page();
-
-        await this.logonAccountManager.BindExistsAccount(directoryService, person, entryGuid);
+        var logonAccount = new DirectoryAccount(directoryService, person.Id);
+        await this.directoryAccountManager.BindExistsAccount(this.personManager, logonAccount, entryGuid.ToString());
         return this.RedirectToPage("DirectoryAccounts", new { anchor });
     }
 }

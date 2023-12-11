@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace IdSubjects.RealName.Tests;
-public class RealNameManagerTest : IClassFixture<ServiceProviderFixture>
+
+[Collection(nameof(ServiceProviderCollection))]
+public class RealNameManagerTest
 {
     private readonly ServiceProviderFixture serviceProvider;
+    private readonly NaturalPerson person = new("zhangsan", new PersonNameInfo("张小三"));
 
     public RealNameManagerTest(ServiceProviderFixture serviceProvider)
     {
@@ -14,7 +16,6 @@ public class RealNameManagerTest : IClassFixture<ServiceProviderFixture>
     [Fact]
     public async Task AddAuthentication()
     {
-        var person = new NaturalPerson("zhangsan", new PersonNameInfo("张小三"));
         var authentication = new DocumentedRealNameAuthentication(
             new ChineseIdCardDocument()
             {
@@ -33,27 +34,24 @@ public class RealNameManagerTest : IClassFixture<ServiceProviderFixture>
 
         using var scope = this.serviceProvider.ScopeFactory.CreateScope();
         var personManager = scope.ServiceProvider.GetRequiredService<NaturalPersonManager>();
-        await personManager.CreateAsync(person);
+        await personManager.CreateAsync(this.person);
 
         //Test
         var realManager = scope.ServiceProvider.GetRequiredService<RealNameManager>();
-        var result = await realManager.AuthenticateAsync(person, authentication);
+        var result = await realManager.AuthenticateAsync(this.person, authentication);
 
         Assert.True(result.Succeeded);
-        Assert.Equal("张三", person.PersonName.FullName);
+        Assert.Equal("张三", this.person.PersonName.FullName);
     }
 
     [Fact]
     public async Task CannotChangeNameWhenRealNameAuthenticationExists()
     {
-        var person = new NaturalPerson("zhangsan", new PersonNameInfo("张小三"));
-        
-
         using var scope = this.serviceProvider.ScopeFactory.CreateScope();
         var personManager = scope.ServiceProvider.GetRequiredService<NaturalPersonManager>();
-        await personManager.CreateAsync(person);
+        await personManager.CreateAsync(this.person);
 
-        var target = (await personManager.FindByIdAsync(person.Id))!;
+        var target = (await personManager.FindByIdAsync(this.person.Id))!;
 
         var realManager = scope.ServiceProvider.GetRequiredService<RealNameManager>();
         var authentication = new DocumentedRealNameAuthentication(

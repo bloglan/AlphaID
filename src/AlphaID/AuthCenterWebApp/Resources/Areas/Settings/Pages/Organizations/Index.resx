@@ -115,4 +115,8 @@
   <data name="Your organizations" xml:space="preserve">
 	  <value>Your organizations</value>
   </data>
+  <data name="New organization" xml:space="preserve">
+	  <value>New organization</value>
+	  <comment>New organization</comment>
+  </data>
 </root>

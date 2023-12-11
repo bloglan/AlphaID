@@ -28,6 +28,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\IdSubjects.DirectoryLogon\IdSubjects.DirectoryLogon.csproj" />
+		<ProjectReference Include="..\IdSubjects.Tests\IdSubjects.Tests.csproj" />
 	</ItemGroup>
 
 </Project>

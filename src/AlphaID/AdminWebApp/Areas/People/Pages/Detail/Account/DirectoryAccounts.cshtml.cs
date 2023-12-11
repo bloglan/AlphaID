@@ -7,17 +7,17 @@ namespace AdminWebApp.Areas.People.Pages.Detail.Account;
 public class DirectoryAccountsModel : PageModel
 {
     private readonly NaturalPersonManager personManager;
-    private readonly LogonAccountManager logonAccountManager;
+    private readonly DirectoryAccountManager directoryAccountManager;
 
-    public DirectoryAccountsModel(NaturalPersonManager personManager, LogonAccountManager logonAccountManager)
+    public DirectoryAccountsModel(NaturalPersonManager personManager, DirectoryAccountManager directoryAccountManager)
     {
         this.personManager = personManager;
-        this.logonAccountManager = logonAccountManager;
+        this.directoryAccountManager = directoryAccountManager;
     }
 
     public NaturalPerson Person { get; set; } = default!;
 
-    public IEnumerable<LogonAccount> LogonAccounts { get; set; } = default!;
+    public IEnumerable<DirectoryAccount> LogonAccounts { get; set; } = default!;
 
     public async Task<IActionResult> OnGet(string anchor)
     {
@@ -26,7 +26,7 @@ public class DirectoryAccountsModel : PageModel
             return this.NotFound();
 
         this.Person = person;
-        this.LogonAccounts = this.logonAccountManager.GetLogonAccounts(this.Person);
+        this.LogonAccounts = this.directoryAccountManager.GetLogonAccounts(this.Person);
         return this.Page();
     }
 }

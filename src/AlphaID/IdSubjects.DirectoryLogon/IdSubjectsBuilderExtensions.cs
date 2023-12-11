@@ -1,4 +1,5 @@
 ﻿using IdSubjects.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IdSubjects.DirectoryLogon;
@@ -16,8 +17,14 @@ public static class IdSubjectsBuilderExtensions
     public static DirectoryLogonBuilder AddDirectoryLogin(this IdSubjectsBuilder builder)
     {
         builder.Services.TryAddScoped<DirectoryServiceManager>();
-        builder.Services.TryAddScoped<LogonAccountManager>();
-        builder.AddInterceptor<DirectoryLogonUpdateInterceptor>();
+        builder.Services.TryAddScoped<DirectoryAccountManager>();
+
+        //注册所需拦截器。
+        builder.AddInterceptor<DirectoryAccountUpdateInterceptor>();
+        builder.AddInterceptor<DirectoryAccountCreateInterceptor>();
+        builder.AddInterceptor<UserPasswordInterceptor>();
+
+        builder.Services.AddScoped<ISubjectGenerator, AdfsSubjectGenerator>();
 
         var directoryLogonBuilder = new DirectoryLogonBuilder(builder.Services);
         return directoryLogonBuilder;
