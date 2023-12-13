@@ -75,4 +75,34 @@ public class PersonController : ControllerBase
         return new PersonSearchResult(final, pinyinSearchSetCount > 30 || nameSearchSetCount > 30);
     }
 
+    /// <summary>
+    /// 自然人
+    /// </summary>
+    /// <param name="UserName"> 主体Id. </param>
+    /// <param name="Name"> Name </param>
+    /// <param name="PhoneticSearchHint">  </param>
+    public record PersonModel(string UserName,
+                              string Name,
+                              string? PhoneticSearchHint)
+    {
+
+        /// <summary>
+        /// 通过NaturalPerson初始化自然人。
+        /// </summary>
+        /// <param name="person"></param>
+        public PersonModel(NaturalPerson person)
+            : this(person.UserName,
+                   person.PersonName.FullName,
+                   person.PersonName.SearchHint)
+        { }
+    }
+
+
+    /// <summary>
+    /// 自然人搜索结果。
+    /// </summary>
+    /// <param name="Persons">自然人搜索的结果。</param>
+    /// <param name="More">指示一个值，表示该结果不完全，需要尝试更多的关键字来缩小搜索范围。</param>
+    public record PersonSearchResult(IEnumerable<PersonModel> Persons, bool More = false);
+
 }

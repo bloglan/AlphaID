@@ -30,4 +30,14 @@ public class PersonControllerTests
         var data = await response.Content.ReadFromJsonAsync<PersonSearchResult>();
         Assert.True(data!.Persons.Any());
     }
+
+    internal record PersonModel(string UserName, string Name, string? PhoneticSearchHint)
+    {
+    }
+
+
+    internal record PersonSearchResult(IEnumerable<PersonModel> Persons, bool More)
+    {
+    }
+
 }

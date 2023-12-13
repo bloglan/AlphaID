@@ -34,7 +34,7 @@ public class OrganizationControllerTest
         var response = await client.GetAsync("/api/Organization/a7be43af-8b49-450e-a600-90a8748e48a5/Members");
         response.EnsureSuccessStatusCode();
 
-        var data = await response.Content.ReadFromJsonAsync<OrganizationMemberModel[]>();
+        var data = await response.Content.ReadFromJsonAsync<MembershipModel[]>();
         Assert.NotEmpty(data!);
     }
 
@@ -47,4 +47,15 @@ public class OrganizationControllerTest
         var json = await response.Content.ReadFromJsonAsync<OrganizationSearchResult>();
         Assert.DoesNotContain(json!.Organizations, p => p.Name.Contains("改名后的有限公司"));
     }
+
+    internal record OrganizationModel(string? Domicile, string? Contact, string? LegalPersonName, DateTime? Expires)
+    {
+        public string SubjectId { get; set; } = default!;
+        public string Name { get; set; } = default!;
+    }
+
+    internal record OrganizationSearchResult(IEnumerable<OrganizationModel> Organizations, bool More)
+    {
+    }
+
 }

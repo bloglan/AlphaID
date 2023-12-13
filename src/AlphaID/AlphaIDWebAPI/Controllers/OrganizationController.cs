@@ -45,14 +45,14 @@ public class OrganizationController : ControllerBase
     /// <param name="id">组织的SubjectId</param>
     /// <returns></returns>
     [HttpGet("{id}/Members")]
-    public async Task<IEnumerable<OrganizationMemberModel>> GetMembersAsync(string id)
+    public async Task<IEnumerable<MembershipModel>> GetMembersAsync(string id)
     {
         var org = await this.organizationStore.FindByIdAsync(id);
         if (org == null)
-            return Enumerable.Empty<OrganizationMemberModel>();
+            return Enumerable.Empty<MembershipModel>();
         var members = await this.memberManager.GetMembersAsync(org);
 
-        return from member in members select new OrganizationMemberModel(member);
+        return from member in members select new MembershipModel(member);
     }
 
     /// <summary>
@@ -72,4 +72,43 @@ public class OrganizationController : ControllerBase
         var result = new OrganizationSearchResult(searchResults.Take(50).Select(p => new OrganizationModel(p)), searchResults.Count() > 50);
         return result;
     }
+
+    /// <summary>
+    /// GenericOrganization.
+    /// </summary>
+    /// <param name="SubjectId">Id</param>
+    /// <param name="Name">名称。</param>
+    /// <param name="Domicile">住所。</param>
+    /// <param name="Contact">联系方式。</param>
+    /// <param name="LegalPersonName">组织的负责人或代表人名称。</param>
+    /// <param name="Expires">有效期。</param>
+    public record OrganizationModel(string SubjectId,
+                                    string Name,
+                                    string? Domicile,
+                                    string? Contact,
+                                    string? LegalPersonName,
+                                    DateOnly? Expires)
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="organization"></param>
+        public OrganizationModel(GenericOrganization organization)
+            : this(organization.Id,
+                   organization.Name,
+                   organization.Domicile,
+                   organization.Contact,
+                   organization.Representative,
+                   organization.TermEnd)
+        { }
+
+    }
+
+    /// <summary>
+    /// 组织机构概要
+    /// </summary>
+    /// <param name="Organizations"> 此查找结果包含的组织信息。 </param>
+    /// <param name="More"> 指示出组织信息集合外，是否还有更多结果未返回。这意味着关键字所匹配结果集较大，需要重新选择关键字以便缩小匹配范围。 </param>
+    public record OrganizationSearchResult(IEnumerable<OrganizationModel> Organizations, bool More = false);
+
 }

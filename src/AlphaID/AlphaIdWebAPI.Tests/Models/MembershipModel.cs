@@ -1,6 +1,6 @@
 ﻿namespace AlphaIdWebAPI.Tests.Models;
 
-internal record OrganizationMemberModel(string? Title, string? Department, string? Remark)
+internal record MembershipModel(string? Title, string? Department, string? Remark)
 {
     public string PersonId { get; set; } = default!;
 

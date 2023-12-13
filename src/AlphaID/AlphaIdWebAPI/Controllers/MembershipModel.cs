@@ -1,6 +1,6 @@
 ﻿using IdSubjects;
 
-namespace AlphaIdWebAPI.Models;
+namespace AlphaIdWebAPI.Controllers;
 
 /// <summary>
 /// 组织的成员。
@@ -12,7 +12,7 @@ namespace AlphaIdWebAPI.Models;
 /// <param name="OrganizationId">组织标识符</param>
 /// <param name="OrganizationName">组织名称</param>
 /// <param name="Remark">备注</param>
-public record OrganizationMemberModel(string PersonId,
+public record MembershipModel(string PersonId,
                                       string PersonName,
                                       string OrganizationId,
                                       string OrganizationName,
@@ -24,7 +24,7 @@ public record OrganizationMemberModel(string PersonId,
     /// Init.
     /// </summary>
     /// <param name="member"></param>
-    public OrganizationMemberModel(OrganizationMember member)
+    public MembershipModel(OrganizationMember member)
         : this(member.PersonId,
                member.Person.PersonName.FullName,
                member.OrganizationId,
@@ -32,6 +32,6 @@ public record OrganizationMemberModel(string PersonId,
                member.Title,
                member.Department,
                member.Remark)
-    {
-    }
+    { }
 }
+
