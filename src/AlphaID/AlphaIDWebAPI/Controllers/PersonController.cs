@@ -1,4 +1,5 @@
-﻿using AlphaIdWebAPI.Models;
+﻿using AlphaIdPlatform;
+using Castle.Components.DictionaryAdapter;
 using IdSubjects;
 using IdSubjects.Subjects;
 using Microsoft.AspNetCore.Authorization;
@@ -15,94 +16,106 @@ namespace AlphaIdWebAPI.Controllers;
 public class PersonController : ControllerBase
 {
     private readonly NaturalPersonManager personManager;
-
+    private SystemUrlInfo urlInfo;
     /// <summary>
     /// Init Person Controller.
     /// </summary>
     /// <param name="personManager"></param>
-    public PersonController(NaturalPersonManager personManager)
+    public PersonController(NaturalPersonManager personManager, IOptions<SystemUrlInfo> urlInfo)
     {
         this.personManager = personManager;
+        this.urlInfo = urlInfo.Value;
+    }
+
+    /// <summary>
+    /// 通过 UserName 获取指定用户的信息。
+    /// </summary>
+    /// <param name="userName"></param>
+    /// <returns></returns>
+    [HttpGet("{userName}")]
+    public async Task<ActionResult<UserInfoModel>> GetUserInfoAsync(string userName)
+    {
+        var person = await this.personManager.FindByNameAsync(userName);
+        if (person == null)
+            return this.NotFound();
+
+        return new UserInfoModel(person.Id, person.PersonName.SearchHint);
+    }
+
+    public record UserInfoModel(string SubjectId, string? SearchHint)
+    {
     }
 
     /// <summary>
     /// 查找某个自然人。
     /// </summary>
-    /// <param name="keywords">关键词。可以通过手机号码、姓名汉字、姓名全拼</param>
+    /// <param name="keywords">关键词。关键词非空长度必须大于2个字符时，才会返回可用结果。可以通过用户名、全名来查找自然人。</param>
     /// <returns>Return matched peoples, up to 50 records.</returns>
     [HttpGet("Search/{keywords}")]
-    public async Task<ActionResult<PersonSearchResult>> SearchAsync(string keywords)
+    public async Task<IEnumerable<SearchPersonModel>> SearchAsync(string keywords)
     {
-        var callClientId = this.User.ClientId();
-        if (callClientId == null)
-            return this.Forbid("Invalid client.");
-
         if (string.IsNullOrWhiteSpace(keywords))
         {
-            return new PersonSearchResult(Enumerable.Empty<PersonModel>());
+            return Enumerable.Empty<SearchPersonModel>();
         }
 
         keywords = keywords.Trim();
         if (keywords.Length < 2)
-            return new PersonSearchResult(Enumerable.Empty<PersonModel>());
+            return Enumerable.Empty<SearchPersonModel>();
 
-        if (MobilePhoneNumber.TryParse(keywords, out MobilePhoneNumber number))
+        HashSet<NaturalPerson> set = new();
+
+        if (keywords.Length >= 3)
         {
-            var result = await this.personManager.FindByMobileAsync(number.ToString(), this.HttpContext.RequestAborted);
-            if (result == null)
-                return new PersonSearchResult(Enumerable.Empty<PersonModel>());
-
-            return new PersonSearchResult(new PersonModel[] { new(result) });
-        }
-        //todo 根据调用者ID来生成结对SubjectId.
-
-        var pinyinSearchSet = this.personManager.Users.Where(p => p.PersonName.SearchHint!.StartsWith(keywords)).OrderBy(p => p.PersonName.SearchHint!.Length).ThenBy(p => p.PersonName.SearchHint);
-        var pinyinSearchSetCount = pinyinSearchSet.Count();
-        var pinyinSearchResult = new List<NaturalPerson>(pinyinSearchSet.Take(30));
-
-        var nameSearchSet = this.personManager.Users.Where(p => p.PersonName.FullName.StartsWith(keywords)).OrderBy(p => p.PersonName.FullName.Length).ThenBy(p => p.PersonName.FullName);
-        var nameSearchSetCount = nameSearchSet.Count();
-        var nameSearchResult = new List<NaturalPerson>(nameSearchSet.Take(30));
-
-        var searchResults = pinyinSearchResult.UnionBy(nameSearchResult, p => p.Id);
-
-        var final = new List<PersonModel>();
-        foreach (var person in searchResults)
-        {
-            final.Add(new PersonModel(person));
+            var pinyinSearchSet = this.personManager.Users
+                .Where(p => p.PersonName.SearchHint!.StartsWith(keywords))
+                .OrderBy(p => p.PersonName.SearchHint!.Length)
+                .ThenBy(p => p.PersonName.SearchHint)
+                .Take(10);
+            set.UnionWith(pinyinSearchSet);
         }
 
-        return new PersonSearchResult(final, pinyinSearchSetCount > 30 || nameSearchSetCount > 30);
+        if (keywords.Length >= 4)
+        {
+            var userNameSearchSet = this.personManager.Users
+                .Where(p => p.UserName.StartsWith(keywords))
+                .OrderBy(p => p.UserName.Length)
+                .ThenBy(p => p.UserName)
+                .Take(10);
+            set.UnionWith(userNameSearchSet);
+        }
+
+        var nameSearchSet = this.personManager.Users
+            .Where(p => p.PersonName.FullName.StartsWith(keywords))
+            .OrderBy(p => p.PersonName.FullName.Length)
+            .ThenBy(p => p.PersonName.FullName)
+            .Take(10);
+        set.UnionWith(nameSearchSet);
+
+
+        return set.Select(p => new SearchPersonModel(p)
+        {
+            Avatar = p.ProfilePicture != null ? new Uri(this.urlInfo.AuthCenterUrl, $"/People/{p.Id}/Avatar").ToString() : null,
+        });
     }
 
     /// <summary>
     /// 自然人
     /// </summary>
-    /// <param name="UserName"> 主体Id. </param>
-    /// <param name="Name"> Name </param>
-    /// <param name="PhoneticSearchHint">  </param>
-    public record PersonModel(string UserName,
+    /// <param name="UserName">用户名</param>
+    /// <param name="Name">全名</param>
+    public record SearchPersonModel(string UserName,
                               string Name,
-                              string? PhoneticSearchHint)
+                              string? Avatar = null)
     {
 
         /// <summary>
         /// 通过NaturalPerson初始化自然人。
         /// </summary>
         /// <param name="person"></param>
-        public PersonModel(NaturalPerson person)
+        public SearchPersonModel(NaturalPerson person)
             : this(person.UserName,
-                   person.PersonName.FullName,
-                   person.PersonName.SearchHint)
+                   person.PersonName.FullName)
         { }
     }
-
-
-    /// <summary>
-    /// 自然人搜索结果。
-    /// </summary>
-    /// <param name="Persons">自然人搜索的结果。</param>
-    /// <param name="More">指示一个值，表示该结果不完全，需要尝试更多的关键字来缩小搜索范围。</param>
-    public record PersonSearchResult(IEnumerable<PersonModel> Persons, bool More = false);
-
 }

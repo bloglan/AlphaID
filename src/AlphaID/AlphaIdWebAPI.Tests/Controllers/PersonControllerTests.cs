@@ -1,9 +1,11 @@
-﻿using AlphaIdWebAPI.Tests.Models;
+﻿using AlphaIdWebAPI.Controllers;
+using AlphaIdWebAPI.Tests.Models;
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Json;
 using Xunit;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace AlphaIdWebAPI.Tests.Controllers;
 
@@ -25,19 +27,30 @@ public class PersonControllerTests
         var client = this.factory.CreateAuthenticatedClient();
 
         var response = await client.GetAsync($"/api/Person/Search/{WebUtility.UrlEncode(keywords)}");
-        _ = await response.Content.ReadAsStringAsync();
         response.EnsureSuccessStatusCode();
-        var data = await response.Content.ReadFromJsonAsync<PersonSearchResult>();
-        Assert.True(data!.Persons.Any());
+        var data = await response.Content.ReadFromJsonAsync<IEnumerable<SearchPersonModel>>();
+        Assert.True(data!.Any());
+        var one = data!.First();
+        Assert.NotNull(one.Avatar);
     }
 
-    internal record PersonModel(string UserName, string Name, string? PhoneticSearchHint)
+    [Fact]
+    public async Task GetUserInfo()
+    {
+        var client = this.factory.CreateAuthenticatedClient();
+
+        var response = await client.GetAsync($"/api/Person/liubei");
+        response.EnsureSuccessStatusCode();
+        var data = await response.Content.ReadFromJsonAsync<UserInfoModel>();
+        Assert.Equal("d2480421-8a15-4292-8e8f-06985a1f645b", data!.SubjectId);
+        Assert.Equal("LIUBEI", data!.SearchHint);
+    }
+
+    internal record SearchPersonModel(string UserName, string Name, string? Avatar)
     {
     }
 
-
-    internal record PersonSearchResult(IEnumerable<PersonModel> Persons, bool More)
+    internal record UserInfoModel(string SubjectId, string? SearchHint)
     {
     }
-
 }

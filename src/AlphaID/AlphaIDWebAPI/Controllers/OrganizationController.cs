@@ -81,13 +81,11 @@ public class OrganizationController : ControllerBase
     /// <param name="Domicile">住所。</param>
     /// <param name="Contact">联系方式。</param>
     /// <param name="LegalPersonName">组织的负责人或代表人名称。</param>
-    /// <param name="Expires">有效期。</param>
     public record OrganizationModel(string SubjectId,
                                     string Name,
                                     string? Domicile,
                                     string? Contact,
-                                    string? LegalPersonName,
-                                    DateOnly? Expires)
+                                    string? LegalPersonName)
     {
         /// <summary>
         /// 
@@ -98,8 +96,7 @@ public class OrganizationController : ControllerBase
                    organization.Name,
                    organization.Domicile,
                    organization.Contact,
-                   organization.Representative,
-                   organization.TermEnd)
+                   organization.Representative)
         { }
 
     }
