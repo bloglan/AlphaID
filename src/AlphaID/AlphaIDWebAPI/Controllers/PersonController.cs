@@ -1,9 +1,8 @@
 ﻿using AlphaIdPlatform;
-using Castle.Components.DictionaryAdapter;
 using IdSubjects;
-using IdSubjects.Subjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace AlphaIdWebAPI.Controllers;
 
@@ -16,14 +15,17 @@ namespace AlphaIdWebAPI.Controllers;
 public class PersonController : ControllerBase
 {
     private readonly NaturalPersonManager personManager;
-    private SystemUrlInfo urlInfo;
+    OrganizationMemberManager memberManager;
+    private readonly SystemUrlInfo urlInfo;
     /// <summary>
     /// Init Person Controller.
     /// </summary>
     /// <param name="personManager"></param>
-    public PersonController(NaturalPersonManager personManager, IOptions<SystemUrlInfo> urlInfo)
+    /// <param name="urlInfo"></param>
+    public PersonController(NaturalPersonManager personManager, IOptions<SystemUrlInfo> urlInfo, OrganizationMemberManager memberManager)
     {
         this.personManager = personManager;
+        this.memberManager = memberManager;
         this.urlInfo = urlInfo.Value;
     }
 
@@ -33,52 +35,54 @@ public class PersonController : ControllerBase
     /// <param name="userName"></param>
     /// <returns></returns>
     [HttpGet("{userName}")]
-    public async Task<ActionResult<UserInfoModel>> GetUserInfoAsync(string userName)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PersonInfoModel>> GetUserInfoAsync(string userName)
     {
         var person = await this.personManager.FindByNameAsync(userName);
         if (person == null)
             return this.NotFound();
 
-        return new UserInfoModel(person.Id, person.PersonName.SearchHint);
+        return new PersonInfoModel(person.Id, person.PersonName.FullName, person.PersonName.SearchHint,
+            new Uri(this.urlInfo.AuthCenterUrl, $"/People/{person.Id}/Avatar").ToString());
     }
 
-    public record UserInfoModel(string SubjectId, string? SearchHint)
-    {
-    }
 
     /// <summary>
     /// 查找某个自然人。
     /// </summary>
-    /// <param name="keywords">关键词。关键词非空长度必须大于2个字符时，才会返回可用结果。可以通过用户名、全名来查找自然人。</param>
+    /// <param name="q">关键词。关键词非空长度必须大于2个字符时，才会返回可用结果。可以通过用户名、全名来查找自然人。</param>
     /// <returns>Return matched peoples, up to 50 records.</returns>
-    [HttpGet("Search/{keywords}")]
-    public async Task<IEnumerable<SearchPersonModel>> SearchAsync(string keywords)
+    [HttpGet("Suggestions")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IEnumerable<SuggestedPersonModel> SearchAsync(string q)
     {
-        if (string.IsNullOrWhiteSpace(keywords))
+        if (string.IsNullOrWhiteSpace(q))
         {
-            return Enumerable.Empty<SearchPersonModel>();
+            return Enumerable.Empty<SuggestedPersonModel>();
         }
 
-        keywords = keywords.Trim();
-        if (keywords.Length < 2)
-            return Enumerable.Empty<SearchPersonModel>();
+        q = q.Trim();
+        if (q.Length < 2)
+            return Enumerable.Empty<SuggestedPersonModel>();
 
         HashSet<NaturalPerson> set = new();
 
-        if (keywords.Length >= 3)
+        if (q.Length >= 3)
         {
             var pinyinSearchSet = this.personManager.Users
-                .Where(p => p.PersonName.SearchHint!.StartsWith(keywords))
+                .Where(p => p.PersonName.SearchHint!.StartsWith(q))
                 .OrderBy(p => p.PersonName.SearchHint!.Length)
                 .ThenBy(p => p.PersonName.SearchHint)
                 .Take(10);
             set.UnionWith(pinyinSearchSet);
         }
 
-        if (keywords.Length >= 4)
+        if (q.Length >= 4)
         {
             var userNameSearchSet = this.personManager.Users
-                .Where(p => p.UserName.StartsWith(keywords))
+                .Where(p => p.UserName.StartsWith(q))
                 .OrderBy(p => p.UserName.Length)
                 .ThenBy(p => p.UserName)
                 .Take(10);
@@ -86,36 +90,91 @@ public class PersonController : ControllerBase
         }
 
         var nameSearchSet = this.personManager.Users
-            .Where(p => p.PersonName.FullName.StartsWith(keywords))
+            .Where(p => p.PersonName.FullName.StartsWith(q))
             .OrderBy(p => p.PersonName.FullName.Length)
             .ThenBy(p => p.PersonName.FullName)
             .Take(10);
         set.UnionWith(nameSearchSet);
 
 
-        return set.Select(p => new SearchPersonModel(p)
+        return set.Select(p => new SuggestedPersonModel(p)
         {
-            Avatar = p.ProfilePicture != null ? new Uri(this.urlInfo.AuthCenterUrl, $"/People/{p.Id}/Avatar").ToString() : null,
+            AvatarUrl = new Uri(this.urlInfo.AuthCenterUrl, $"/People/{p.Id}/Avatar").ToString(),
         });
     }
+
+    [HttpGet("{userName}/Memberships")]
+    public async Task<IEnumerable<MembershipModel>> GetMemberships(string userName)
+    {
+        //todo 从令牌确定访问者。
+
+        var person = await this.personManager.FindByNameAsync(userName);
+        if(person == null)
+            return Enumerable.Empty<MembershipModel>();
+
+        var members = this.memberManager.GetVisibleMembersOf(person, null);
+        return members.Select(m => new MembershipModel(m));
+    }
+
+    /// <summary>
+    /// 用户信息。
+    /// </summary>
+    /// <param name="SubjectId">Subject Id</param>
+    /// <param name="Name">全名</param>
+    /// <param name="SearchHint">搜索提示</param>
+    /// <param name="AvatarUrl">头像Url</param>
+    public record PersonInfoModel(string SubjectId,
+        string Name,
+        string? SearchHint,
+        string? AvatarUrl);
 
     /// <summary>
     /// 自然人
     /// </summary>
     /// <param name="UserName">用户名</param>
     /// <param name="Name">全名</param>
-    public record SearchPersonModel(string UserName,
+    /// <param name="AvatarUrl"></param>
+    public record SuggestedPersonModel(string UserName,
                               string Name,
-                              string? Avatar = null)
+                              string? AvatarUrl = null)
     {
 
         /// <summary>
         /// 通过NaturalPerson初始化自然人。
         /// </summary>
         /// <param name="person"></param>
-        public SearchPersonModel(NaturalPerson person)
+        public SuggestedPersonModel(NaturalPerson person)
             : this(person.UserName,
                    person.PersonName.FullName)
         { }
     }
+
+    /// <summary>
+    /// 组织的成员。
+    /// </summary>
+    /// <param name="Department">部门</param>
+    /// <param name="Title">职务</param>
+    /// <param name="OrganizationId">组织标识符</param>
+    /// <param name="OrganizationName">组织名称</param>
+    /// <param name="Remark">备注</param>
+    public record MembershipModel(
+        string OrganizationId,
+        string OrganizationName,
+        string? Title,
+        string? Department,
+        string? Remark)
+    {
+        /// <summary>
+        /// Init.
+        /// </summary>
+        /// <param name="member"></param>
+        public MembershipModel(OrganizationMember member)
+            : this(member.OrganizationId,
+                member.Organization.Name,
+                member.Title,
+                member.Department,
+                member.Remark)
+        { }
+    }
+
 }

@@ -45,14 +45,39 @@ public class OrganizationController : ControllerBase
     /// <param name="id">组织的SubjectId</param>
     /// <returns></returns>
     [HttpGet("{id}/Members")]
-    public async Task<IEnumerable<MembershipModel>> GetMembersAsync(string id)
+    public async Task<IEnumerable<MemberModel>> GetMembersAsync(string id)
     {
+        //todo 从令牌确定访问者。
         var org = await this.organizationStore.FindByIdAsync(id);
         if (org == null)
-            return Enumerable.Empty<MembershipModel>();
-        var members = await this.memberManager.GetMembersAsync(org);
+            return Enumerable.Empty<MemberModel>();
+        var members = await this.memberManager.GetVisibleMembersAsync(org, null);
 
-        return from member in members select new MembershipModel(member);
+        return from member in members select new MemberModel(member);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Name"></param>
+    /// <param name="UserName"></param>
+    /// <param name="Title"></param>
+    /// <param name="Department"></param>
+    /// <param name="Remarks"></param>
+    public record MemberModel(
+        string Name,
+        string UserName,
+        string? Title,
+        string? Department,
+        string? Remarks)
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="member"></param>
+        public MemberModel(OrganizationMember member)
+            : this(member.Person.PersonName.FullName, member.Person.UserName, member.Title, member.Department, member.Remark)
+        {}
     }
 
     /// <summary>
@@ -61,15 +86,15 @@ public class OrganizationController : ControllerBase
     /// <remarks>
     /// 支持通过登记的统一社会信用代码、组织机构代码、组织名称的一部分进行查找。
     /// </remarks>
-    /// <param name="keywords">关键字</param>
+    /// <param name="q">关键字</param>
     /// <returns></returns>
-    [HttpGet("Search/{keywords}")]
+    [HttpGet("Suggestions")]
     [AllowAnonymous]
-    public OrganizationSearchResult Search(string keywords)
+    public IEnumerable<OrganizationModel> Search(string q)
     {
-        var searchResults = this.organizationStore.Organizations.Where(p => p.Name.Contains(keywords) && p.Enabled);
+        var searchResults = this.organizationStore.Organizations.Where(p => p.Name.Contains(q) && p.Enabled);
 
-        var result = new OrganizationSearchResult(searchResults.Take(50).Select(p => new OrganizationModel(p)), searchResults.Count() > 50);
+        var result = searchResults.Take(50).Select(p => new OrganizationModel(p));
         return result;
     }
 
@@ -100,12 +125,5 @@ public class OrganizationController : ControllerBase
         { }
 
     }
-
-    /// <summary>
-    /// 组织机构概要
-    /// </summary>
-    /// <param name="Organizations"> 此查找结果包含的组织信息。 </param>
-    /// <param name="More"> 指示出组织信息集合外，是否还有更多结果未返回。这意味着关键字所匹配结果集较大，需要重新选择关键字以便缩小匹配范围。 </param>
-    public record OrganizationSearchResult(IEnumerable<OrganizationModel> Organizations, bool More = false);
 
 }

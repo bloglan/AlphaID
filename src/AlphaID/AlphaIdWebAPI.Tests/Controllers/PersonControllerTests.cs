@@ -31,7 +31,7 @@ public class PersonControllerTests
         var data = await response.Content.ReadFromJsonAsync<IEnumerable<SearchPersonModel>>();
         Assert.True(data!.Any());
         var one = data!.First();
-        Assert.NotNull(one.Avatar);
+        Assert.NotNull(one.AvatarUrl);
     }
 
     [Fact]
@@ -43,14 +43,17 @@ public class PersonControllerTests
         response.EnsureSuccessStatusCode();
         var data = await response.Content.ReadFromJsonAsync<UserInfoModel>();
         Assert.Equal("d2480421-8a15-4292-8e8f-06985a1f645b", data!.SubjectId);
+        Assert.Equal("刘备", data!.Name);
         Assert.Equal("LIUBEI", data!.SearchHint);
+        Assert.NotNull(data!.AvatarUrl);
+
     }
 
-    internal record SearchPersonModel(string UserName, string Name, string? Avatar)
+    internal record SearchPersonModel(string UserName, string Name, string? AvatarUrl)
     {
     }
 
-    internal record UserInfoModel(string SubjectId, string? SearchHint)
+    internal record UserInfoModel(string SubjectId, string Name, string? SearchHint, string? AvatarUrl)
     {
     }
 }

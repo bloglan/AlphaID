@@ -24,7 +24,6 @@ public class ClientController : ControllerBase
     }
 
     /// <summary>
-    /// Gets client name by Client Id.
     /// 通过 Client ID 获取客户端名称。
     /// </summary>
     /// <param name="clientId">Client ID</param>
@@ -32,9 +31,15 @@ public class ClientController : ControllerBase
     /// <response code="200">如果找到了客户端，则返回其名称。</response>
     /// <response code="404">没有找到客户端。</response>
     [HttpGet("{clientId}")]
-    public ActionResult<string> GetClientName(string clientId)
+    public ActionResult<ClientModel> GetClientName(string clientId)
     {
         var client = this.dbContext.Clients.FirstOrDefault(p => p.ClientId == clientId);
-        return client == null ? this.NotFound() : client.ClientName;
+        return client == null ? this.NotFound() : new ClientModel(client.ClientName);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Name"></param>
+    public record ClientModel(string Name);
 }
