@@ -31,12 +31,12 @@ public class OrganizationManager
     /// </summary>
     /// <param name="org"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> CreateAsync(GenericOrganization org)
+    public Task<IdOperationResult> CreateAsync(GenericOrganization org)
     {
         var utcNow = this.TimeProvider.GetUtcNow();
         org.WhenCreated = utcNow;
         org.WhenChanged = utcNow;
-        return await this.Store.CreateAsync(org);
+        return this.Store.CreateAsync(org);
     }
 
     /// <summary>
@@ -88,9 +88,9 @@ public class OrganizationManager
     /// </summary>
     /// <param name="organization"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> DeleteAsync(GenericOrganization organization)
+    public Task<IdOperationResult> DeleteAsync(GenericOrganization organization)
     {
-        return await this.Store.DeleteAsync(organization);
+        return this.Store.DeleteAsync(organization);
     }
 
     /// <summary>
@@ -98,9 +98,9 @@ public class OrganizationManager
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<GenericOrganization?> FindByIdAsync(string id)
+    public Task<GenericOrganization?> FindByIdAsync(string id)
     {
-        return await this.Store.FindByIdAsync(id);
+        return this.Store.FindByIdAsync(id);
     }
 
     /// <summary>
@@ -118,10 +118,10 @@ public class OrganizationManager
     /// </summary>
     /// <param name="org"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> UpdateAsync(GenericOrganization org)
+    public Task<IdOperationResult> UpdateAsync(GenericOrganization org)
     {
         org.WhenChanged = this.TimeProvider.GetUtcNow();
-        return await this.Store.UpdateAsync(org);
+        return this.Store.UpdateAsync(org);
     }
 
     /// <summary>

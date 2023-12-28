@@ -1,6 +1,5 @@
 ﻿using IdSubjects.Diagnostics;
 using Microsoft.AspNetCore.Identity;
-using System.Diagnostics;
 
 namespace IdSubjects.DirectoryLogon;
 internal class UserPasswordInterceptor : IUserPasswordInterceptor

@@ -143,9 +143,9 @@ public class OrganizationMemberManager
     /// </summary>
     /// <param name="member"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> RemoveAsync(OrganizationMember member)
+    public Task<IdOperationResult> RemoveAsync(OrganizationMember member)
     {
-        return await this.store.DeleteAsync(member);
+        return this.store.DeleteAsync(member);
     }
 
     /// <summary>
@@ -153,8 +153,8 @@ public class OrganizationMemberManager
     /// </summary>
     /// <param name="member"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> UpdateAsync(OrganizationMember member)
+    public Task<IdOperationResult> UpdateAsync(OrganizationMember member)
     {
-        return await this.store.UpdateAsync(member);
+        return this.store.UpdateAsync(member);
     }
 }

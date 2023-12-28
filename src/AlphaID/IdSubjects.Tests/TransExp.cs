@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace IdSubjects.Tests;
 public static class TransExp<TIn, TOut>
@@ -12,7 +7,7 @@ public static class TransExp<TIn, TOut>
     private static Func<TIn, TOut> GetFunc()
     {
         ParameterExpression parameterExpression = Expression.Parameter(typeof(TIn), "p");
-        List<MemberBinding> memberBindingList = new List<MemberBinding>();
+        List<MemberBinding> memberBindingList = new();
 
         foreach (var item in typeof(TOut).GetProperties())
         {

@@ -1,11 +1,6 @@
-﻿using AlphaIdWebAPI.Controllers;
-using AlphaIdWebAPI.Tests.Models;
-using Newtonsoft.Json;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
 using Xunit;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace AlphaIdWebAPI.Tests.Controllers;
 

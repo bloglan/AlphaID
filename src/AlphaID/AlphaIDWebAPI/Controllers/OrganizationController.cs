@@ -1,5 +1,4 @@
 ﻿using AlphaIdPlatform.Security;
-using AlphaIdWebAPI.Models;
 using IdSubjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +15,14 @@ public class OrganizationController : ControllerBase
 {
     private readonly IOrganizationStore organizationStore;
     private readonly OrganizationMemberManager memberManager;
-    private NaturalPersonManager personManager;
+    private readonly NaturalPersonManager personManager;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="organizationStore"></param>
     /// <param name="memberManager"></param>
+    /// <param name="personManager"></param>
     public OrganizationController(IOrganizationStore organizationStore, OrganizationMemberManager memberManager, NaturalPersonManager personManager)
     {
         this.organizationStore = organizationStore;
@@ -85,7 +85,7 @@ public class OrganizationController : ControllerBase
         /// <param name="member"></param>
         public MemberModel(OrganizationMember member)
             : this(member.Person.PersonName.FullName, member.Person.UserName, member.Title, member.Department, member.Remark)
-        {}
+        { }
     }
 
     /// <summary>

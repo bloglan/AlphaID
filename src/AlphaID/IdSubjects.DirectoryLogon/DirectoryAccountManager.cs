@@ -136,9 +136,9 @@ public class DirectoryAccountManager
     /// <summary>
     /// 绑定已有账号。
     /// </summary>
-    /// <param name="directoryService"></param>
-    /// <param name="person"></param>
+    /// <param name="account"></param>
     /// <param name="entryObjectGuid"></param>
+    /// <param name="manager"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<挂起>")]

@@ -86,7 +86,7 @@ public class ChineseIdCardRealNameRequest : RealNameRequest
     /// <summary>
     /// 签发日期。
     /// </summary>
-    public DateOnly IssueDate { get; set; } = default!;
+    public DateOnly IssueDate { get; set; }
 
     /// <summary>
     /// 有效期至。若为null，表示长期。

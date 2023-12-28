@@ -68,9 +68,9 @@ public class IndexModel : PageModel
         return this.Page();
     }
 
-    private async Task<Client?> GetClient(int anchor)
+    private Task<Client?> GetClient(int anchor)
     {
-        return await this.dbContext.Clients
+        return this.dbContext.Clients
             .Include(p => p.AllowedScopes)
             .Include(p => p.AllowedGrantTypes)
             .Include(p => p.RedirectUris)

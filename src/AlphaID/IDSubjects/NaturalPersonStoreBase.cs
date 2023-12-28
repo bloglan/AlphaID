@@ -83,6 +83,12 @@ public abstract class NaturalPersonStoreBase : INaturalPersonStore
     /// <returns></returns>
     public abstract Task<NaturalPerson?> FindByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="person"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public abstract Task<NaturalPerson?> GetOriginalAsync(NaturalPerson person, CancellationToken cancellationToken);
 
     /// <summary>
@@ -398,10 +404,10 @@ public abstract class NaturalPersonStoreBase : INaturalPersonStore
     /// <param name="recoveryCodes"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public virtual async Task ReplaceCodesAsync(NaturalPerson user, IEnumerable<string> recoveryCodes, CancellationToken cancellationToken)
+    public virtual Task ReplaceCodesAsync(NaturalPerson user, IEnumerable<string> recoveryCodes, CancellationToken cancellationToken)
     {
         var mergedCodes = string.Join(";", recoveryCodes);
-        await this.SetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, mergedCodes, cancellationToken);
+        return this.SetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, mergedCodes, cancellationToken);
     }
 
     /// <summary>
@@ -423,9 +429,9 @@ public abstract class NaturalPersonStoreBase : INaturalPersonStore
     /// <param name="key"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public virtual async Task SetAuthenticatorKeyAsync(NaturalPerson user, string key, CancellationToken cancellationToken)
+    public virtual Task SetAuthenticatorKeyAsync(NaturalPerson user, string key, CancellationToken cancellationToken)
     {
-        await this.SetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, key, cancellationToken);
+        return this.SetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, key, cancellationToken);
     }
 
     /// <summary>

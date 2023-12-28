@@ -4,7 +4,7 @@ namespace IdSubjects.Diagnostics;
 internal class AggregatedUserPasswordInterceptor : IUserPasswordInterceptor
 {
     private readonly IEnumerable<IUserPasswordInterceptor> interceptors;
-    private readonly Stack<IUserPasswordInterceptor> stack = new Stack<IUserPasswordInterceptor>();
+    private readonly Stack<IUserPasswordInterceptor> stack = new();
 
     public AggregatedUserPasswordInterceptor(IEnumerable<IUserPasswordInterceptor> interceptors)
     {
@@ -13,7 +13,7 @@ internal class AggregatedUserPasswordInterceptor : IUserPasswordInterceptor
 
     public async Task<IdentityResult> PasswordChangingAsync(NaturalPerson person, string? plainPassword, CancellationToken cancellation)
     {
-        List<IdentityError> errors = new List<IdentityError>();
+        List<IdentityError> errors = new();
         bool success = true;
         foreach (var interceptor in this.interceptors)
         {

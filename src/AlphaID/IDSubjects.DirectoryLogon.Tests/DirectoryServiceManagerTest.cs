@@ -15,14 +15,13 @@ public class DirectoryServiceManagerTest
     [Fact(Skip = "不具备可测试性")]
     public async void CreateDirectoryService()
     {
-        var store = new StubDirectoryServiceDescriptorStore();
         using var scope = this.serviceProvider.ScopeFactory.CreateScope();
         var manager = scope.ServiceProvider.GetRequiredService<DirectoryServiceManager>();
 
         var directoryService = new DirectoryServiceDescriptor()
         {
             ServerAddress = "localhost",
-            RootDn = "DC=qjyc,DC=cn",
+            RootDn = "DC=example,DC=com",
         };
         var result = await manager.CreateAsync(directoryService);
         Assert.True(result.Succeeded);

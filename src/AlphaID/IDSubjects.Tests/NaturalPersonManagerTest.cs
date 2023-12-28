@@ -44,6 +44,7 @@ public class NaturalPersonManagerTest
         manager.TimeProvider = new FrozenTimeProvider(now);
         var result = await manager.CreateAsync(person, "Pass123$");
 
+        Assert.True(result.Succeeded);
         Assert.NotNull(person.PasswordHash);
         Assert.Equal(now, person.PasswordLastSet!.Value);
         Assert.Equal(now, this.person.WhenCreated);
@@ -61,6 +62,8 @@ public class NaturalPersonManagerTest
         manager.TimeProvider = new FrozenTimeProvider(now);
 
         var result = await manager.CreateAsync(this.person);
+
+        Assert.True(result.Succeeded);
         Assert.False(person.PasswordLastSet.HasValue);
         Assert.Equal(now, this.person.WhenCreated);
         Assert.Equal(now, this.person.WhenChanged);

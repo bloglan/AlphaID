@@ -36,13 +36,7 @@ public class RoleMembersModel : PageModel
         {
             return this.Page();
         }
-        var userInRole = new UserInRole()
-        {
-            UserId = this.Input.PersonId,
-            RoleName = role,
-            UserName = this.Input.UserName,
-            UserSearchHint = this.Input.PhoneticSearchHint,
-        };
+
         await this.userInRoleManager.AddRole(this.Input.PersonId, role, this.Input.UserName, this.Input.PhoneticSearchHint);
         this.Input = default!;
         return this.RedirectToPage();

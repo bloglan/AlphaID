@@ -117,9 +117,9 @@ public class NaturalPersonManager : UserManager<NaturalPerson>
     /// </summary>
     /// <param name="current"></param>
     /// <returns></returns>
-    public virtual async Task<NaturalPerson?> GetOriginalAsync(NaturalPerson current)
+    public virtual Task<NaturalPerson?> GetOriginalAsync(NaturalPerson current)
     {
-        return await this.Store.GetOriginalAsync(current, CancellationToken.None);
+        return this.Store.GetOriginalAsync(current, CancellationToken.None);
     }
 
     /// <summary>
@@ -204,10 +204,10 @@ public class NaturalPersonManager : UserManager<NaturalPerson>
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
-    protected override async Task<IdentityResult> UpdateUserAsync(NaturalPerson user)
+    protected override Task<IdentityResult> UpdateUserAsync(NaturalPerson user)
     {
         user.WhenChanged = this.TimeProvider.GetUtcNow();
-        return await base.UpdateUserAsync(user);
+        return base.UpdateUserAsync(user);
     }
 
     /// <summary>
@@ -473,10 +473,10 @@ public class NaturalPersonManager : UserManager<NaturalPerson>
     /// <param name="person"></param>
     /// <param name="personName"></param>
     /// <returns></returns>
-    public async Task<IdentityResult> AdminChangePersonNameAsync(NaturalPerson person, PersonNameInfo personName)
+    public Task<IdentityResult> AdminChangePersonNameAsync(NaturalPerson person, PersonNameInfo personName)
     {
         person.PersonName = personName;
-        return await this.UpdateAsync(person);
+        return this.UpdateAsync(person);
     }
 
 

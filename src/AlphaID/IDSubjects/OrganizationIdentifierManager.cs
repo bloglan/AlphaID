@@ -54,9 +54,9 @@ public class OrganizationIdentifierManager
     /// </summary>
     /// <param name="identifier"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> RemoveIdentifierAsync(OrganizationIdentifier identifier)
+    public Task<IdOperationResult> RemoveIdentifierAsync(OrganizationIdentifier identifier)
     {
-        return await this.store.DeleteAsync(identifier);
+        return this.store.DeleteAsync(identifier);
     }
 
     /// <summary>

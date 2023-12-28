@@ -3,7 +3,6 @@ using AlphaIdPlatform.Security;
 using IdSubjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace AlphaIdWebAPI.Controllers;
 
@@ -16,13 +15,15 @@ namespace AlphaIdWebAPI.Controllers;
 public class PersonController : ControllerBase
 {
     private readonly NaturalPersonManager personManager;
-    OrganizationMemberManager memberManager;
+    private readonly OrganizationMemberManager memberManager;
     private readonly SystemUrlInfo urlInfo;
+
     /// <summary>
     /// Init Person Controller.
     /// </summary>
     /// <param name="personManager"></param>
     /// <param name="urlInfo"></param>
+    /// <param name="memberManager"></param>
     public PersonController(NaturalPersonManager personManager, IOptions<SystemUrlInfo> urlInfo, OrganizationMemberManager memberManager)
     {
         this.personManager = personManager;

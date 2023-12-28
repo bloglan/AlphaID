@@ -100,9 +100,9 @@ public class OrganizationBankAccountManager
     /// </summary>
     /// <param name="bankAccount"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> Update(OrganizationBankAccount bankAccount)
+    public Task<IdOperationResult> Update(OrganizationBankAccount bankAccount)
     {
-        return await this.store.UpdateAsync(bankAccount);
+        return this.store.UpdateAsync(bankAccount);
     }
 
     /// <summary>
@@ -110,8 +110,8 @@ public class OrganizationBankAccountManager
     /// </summary>
     /// <param name="bankAccount"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> RemoveAsync(OrganizationBankAccount bankAccount)
+    public Task<IdOperationResult> RemoveAsync(OrganizationBankAccount bankAccount)
     {
-        return await this.store.DeleteAsync(bankAccount);
+        return this.store.DeleteAsync(bankAccount);
     }
 }

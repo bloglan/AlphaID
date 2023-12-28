@@ -61,14 +61,14 @@ public class RealNameManager
     /// </summary>
     /// <param name="authentication"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> RemoveAsync(RealNameAuthentication authentication)
+    public Task<IdOperationResult> RemoveAsync(RealNameAuthentication authentication)
     {
-        return await this.store.DeleteAsync(authentication);
+        return this.store.DeleteAsync(authentication);
     }
 
-    internal async Task<IdOperationResult> UpdateAsync(RealNameAuthentication authentication)
+    internal Task<IdOperationResult> UpdateAsync(RealNameAuthentication authentication)
     {
-        return await this.store.UpdateAsync(authentication);
+        return this.store.UpdateAsync(authentication);
     }
 
     internal bool HasAuthenticated(NaturalPerson person)
@@ -91,8 +91,8 @@ public class RealNameManager
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<RealNameAuthentication?> FindByIdAsync(string id)
+    public Task<RealNameAuthentication?> FindByIdAsync(string id)
     {
-        return await this.store.FindByIdAsync(id);
+        return this.store.FindByIdAsync(id);
     }
 }

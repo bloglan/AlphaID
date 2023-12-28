@@ -1,6 +1,4 @@
 ﻿using IdSubjects.Subjects;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace IdSubjects.Tests;

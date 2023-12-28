@@ -91,7 +91,7 @@ public class DefaultEventService : IEventService
     /// </summary>
     /// <param name="evt">The evt.</param>
     /// <returns></returns>
-    protected virtual async Task PrepareEventAsync(AuditLogEvent evt)
+    protected virtual Task PrepareEventAsync(AuditLogEvent evt)
     {
         evt.ActivityId = this.Context.HttpContext?.TraceIdentifier;
         evt.TimeStamp = DateTime.UtcNow;
@@ -108,6 +108,6 @@ public class DefaultEventService : IEventService
 
         evt.RemoteIpAddress = this.Context.HttpContext?.Connection.RemoteIpAddress != null ? this.Context.HttpContext.Connection.RemoteIpAddress.ToString() : "unknown";
 
-        await evt.PrepareAsync();
+        return evt.PrepareAsync();
     }
 }

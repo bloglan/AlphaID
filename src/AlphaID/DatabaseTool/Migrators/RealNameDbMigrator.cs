@@ -26,9 +26,9 @@ internal class RealNameDbMigrator : DatabaseMigrator
         await this.db.Database.EnsureDeletedAsync();
     }
 
-    public override async Task MigrateAsync()
+    public override Task MigrateAsync()
     {
-        await this.db.Database.MigrateAsync();
+        return this.db.Database.MigrateAsync();
     }
 
     public override Task PostMigrationAsync()

@@ -49,7 +49,7 @@ public class UserInRoleManager
     /// <param name="userName"></param>
     /// <param name="userSearchHint"></param>
     /// <returns></returns>
-    public async Task AddRole(string userId, string roleName, string userName, string userSearchHint)
+    public Task AddRole(string userId, string roleName, string userName, string userSearchHint)
     {
         UserInRole userInRole = new()
         {
@@ -58,7 +58,7 @@ public class UserInRoleManager
             UserName = userName,
             UserSearchHint = userSearchHint,
         };
-        await this.store.CreateAsync(userInRole);
+        return this.store.CreateAsync(userInRole);
     }
 
     /// <summary>
@@ -67,10 +67,11 @@ public class UserInRoleManager
     /// <param name="userId"></param>
     /// <param name="roleName"></param>
     /// <returns></returns>
-    public async Task RemoveRole(string userId, string roleName)
+    public Task RemoveRole(string userId, string roleName)
     {
         var userInRole = this.store.UserInRoles.FirstOrDefault(p => p.UserId == userId && p.RoleName == roleName);
         if (userInRole != null)
-            await this.store.DeleteAsync(userInRole);
+            return this.store.DeleteAsync(userInRole);
+        return Task.CompletedTask;
     }
 }

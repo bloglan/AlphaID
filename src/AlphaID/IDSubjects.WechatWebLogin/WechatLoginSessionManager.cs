@@ -56,9 +56,9 @@ public class WechatLoginSessionManager
     /// </summary>
     /// <param name="session"></param>
     /// <returns></returns>
-    public async Task UpdateAsync(WechatLoginSession session)
+    public Task UpdateAsync(WechatLoginSession session)
     {
-        await this.store.UpdateAsync(session);
+        return this.store.UpdateAsync(session);
     }
 
     /// <summary>

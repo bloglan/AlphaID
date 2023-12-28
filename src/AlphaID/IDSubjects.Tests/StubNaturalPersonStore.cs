@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
-using System.Reflection;
 using System.Security.Claims;
 
 namespace IdSubjects.Tests;

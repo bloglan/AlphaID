@@ -17,7 +17,7 @@ namespace AdminWebApp.Areas.People.Pages.Detail
 
         public NaturalPerson Data { get; set; } = default!;
 
-        public IEnumerable<RealNameAuthentication> RealNameAuthentications { get; set; }
+        public IEnumerable<RealNameAuthentication> RealNameAuthentications { get; set; } = Enumerable.Empty<RealNameAuthentication>();
 
         public async Task<IActionResult> OnGet(string anchor)
         {

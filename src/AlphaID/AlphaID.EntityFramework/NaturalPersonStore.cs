@@ -61,9 +61,9 @@ internal class NaturalPersonStore : NaturalPersonStoreBase
         return this.context.People.SingleOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail, cancellationToken);
     }
 
-    public override async Task<NaturalPerson?> GetOriginalAsync(NaturalPerson person, CancellationToken cancellationToken)
+    public override Task<NaturalPerson?> GetOriginalAsync(NaturalPerson person, CancellationToken cancellationToken)
     {
-        return await this.context.People.AsNoTrackingWithIdentityResolution().SingleOrDefaultAsync(p => p.Id == person.Id, cancellationToken: cancellationToken);
+        return this.context.People.AsNoTrackingWithIdentityResolution().SingleOrDefaultAsync(p => p.Id == person.Id, cancellationToken: cancellationToken);
     }
 
     public override async Task<NaturalPerson?> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -71,9 +71,9 @@ internal class NaturalPersonStore : NaturalPersonStoreBase
         return await this.context.People.FindAsync(new object?[] { userId }, cancellationToken: cancellationToken);
     }
 
-    public override async Task<NaturalPerson?> FindByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
+    public override Task<NaturalPerson?> FindByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
     {
-        return await this.context.People.SingleOrDefaultAsync(p => p.PhoneNumber == phoneNumber, cancellationToken);
+        return this.context.People.SingleOrDefaultAsync(p => p.PhoneNumber == phoneNumber, cancellationToken);
     }
 
     public override async Task<NaturalPerson?> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)

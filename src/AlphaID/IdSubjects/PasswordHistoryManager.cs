@@ -64,8 +64,8 @@ public class PasswordHistoryManager
     /// </summary>
     /// <param name="person"></param>
     /// <returns></returns>
-    public async Task Clear(NaturalPerson person)
+    public Task Clear(NaturalPerson person)
     {
-        await this.store.ClearAsync(person);
+        return this.store.ClearAsync(person);
     }
 }

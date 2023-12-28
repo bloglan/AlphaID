@@ -106,9 +106,9 @@ public class RealNameRequestManager
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    private async Task<IdOperationResult> UpdateAsync(RealNameRequest request)
+    private Task<IdOperationResult> UpdateAsync(RealNameRequest request)
     {
-        return await this.store.UpdateAsync(request);
+        return this.store.UpdateAsync(request);
     }
 
     /// <summary>
@@ -126,9 +126,9 @@ public class RealNameRequestManager
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<RealNameRequest?> FindByIdAsync(int id)
+    public Task<RealNameRequest?> FindByIdAsync(int id)
     {
-        return await this.store.FindByIdAsync(id);
+        return this.store.FindByIdAsync(id);
     }
 
     /// <summary>
@@ -137,9 +137,9 @@ public class RealNameRequestManager
     /// <param name="request"></param>
     /// <param name="auditor"></param>
     /// <returns></returns>
-    public async Task<IdOperationResult> RefuseAsync(RealNameRequest request, string? auditor = null)
+    public Task<IdOperationResult> RefuseAsync(RealNameRequest request, string? auditor = null)
     {
         request.SetAudit(false, auditor, this.TimeProvider.GetUtcNow());
-        return await this.UpdateAsync(request);
+        return this.UpdateAsync(request);
     }
 }

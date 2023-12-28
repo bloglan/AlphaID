@@ -4,7 +4,7 @@ namespace IdSubjects.Diagnostics;
 internal class NaturalPersonUpdateInterceptorAggregator
 {
     private readonly IEnumerable<INaturalPersonUpdateInterceptor> interceptors;
-    private readonly Stack<INaturalPersonUpdateInterceptor> stack = new Stack<INaturalPersonUpdateInterceptor>();
+    private readonly Stack<INaturalPersonUpdateInterceptor> stack = new();
 
     public NaturalPersonUpdateInterceptorAggregator(IEnumerable<INaturalPersonUpdateInterceptor> interceptors)
     {

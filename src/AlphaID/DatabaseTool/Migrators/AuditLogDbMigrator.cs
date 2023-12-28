@@ -16,9 +16,9 @@ internal class AuditLogDbMigrator:DatabaseMigrator
         await this.dbContext.Database.EnsureDeletedAsync();
     }
 
-    public override async Task MigrateAsync()
+    public override Task MigrateAsync()
     {
-        await this.dbContext.Database.MigrateAsync();
+        return this.dbContext.Database.MigrateAsync();
     }
 
     public override Task PostMigrationAsync()
