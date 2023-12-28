@@ -1,4 +1,5 @@
-﻿using AlphaIdWebAPI.Models;
+﻿using AlphaIdPlatform.Security;
+using AlphaIdWebAPI.Models;
 using IdSubjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +16,18 @@ public class OrganizationController : ControllerBase
 {
     private readonly IOrganizationStore organizationStore;
     private readonly OrganizationMemberManager memberManager;
+    private NaturalPersonManager personManager;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="organizationStore"></param>
     /// <param name="memberManager"></param>
-    public OrganizationController(IOrganizationStore organizationStore, OrganizationMemberManager memberManager)
+    public OrganizationController(IOrganizationStore organizationStore, OrganizationMemberManager memberManager, NaturalPersonManager personManager)
     {
         this.organizationStore = organizationStore;
         this.memberManager = memberManager;
+        this.personManager = personManager;
     }
 
     /// <summary>
@@ -47,11 +50,16 @@ public class OrganizationController : ControllerBase
     [HttpGet("{id}/Members")]
     public async Task<IEnumerable<MemberModel>> GetMembersAsync(string id)
     {
+        NaturalPerson? visitor = default;
+        var visitorSubjectId = this.User.SubjectId();
+        if (visitorSubjectId != null)
+            visitor = await this.personManager.FindByIdAsync(this.User.SubjectId()!);
+
         //todo 从令牌确定访问者。
         var org = await this.organizationStore.FindByIdAsync(id);
         if (org == null)
             return Enumerable.Empty<MemberModel>();
-        var members = await this.memberManager.GetVisibleMembersAsync(org, null);
+        var members = await this.memberManager.GetVisibleMembersAsync(org, visitor);
 
         return from member in members select new MemberModel(member);
     }

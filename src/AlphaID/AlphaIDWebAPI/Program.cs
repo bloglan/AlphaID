@@ -4,6 +4,7 @@ using AlphaIdPlatform;
 using AlphaIdWebAPI;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Options;
+using IdentityModel;
 using IdSubjects.RealName;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -98,7 +99,14 @@ builder.Services.AddAuthorization(options =>
 {
     options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
     .RequireClaim("scope", "openid")
+    .RequireClaim(JwtClaimTypes.ClientId)
     .Build();
+
+    options.AddPolicy("EndUser", policy =>
+    {
+        policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+        policy.RequireClaim(JwtClaimTypes.Subject);
+    });
 
     options.AddPolicy("RealNameScopeRequired", policyBuilder =>
     {

@@ -35,7 +35,7 @@ internal class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptio
             };
             var identity = new ClaimsIdentity(claims, "AuthenticationTypes.Federation");
             var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, "TestScheme");
+            var ticket = new AuthenticationTicket(principal, "Bearer");
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }
         return Task.FromResult(AuthenticateResult.NoResult());

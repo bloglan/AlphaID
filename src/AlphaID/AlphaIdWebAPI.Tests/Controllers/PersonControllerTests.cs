@@ -26,7 +26,7 @@ public class PersonControllerTests
     {
         var client = this.factory.CreateAuthenticatedClient();
 
-        var response = await client.GetAsync($"/api/Person/Search/{WebUtility.UrlEncode(keywords)}");
+        var response = await client.GetAsync($"/api/Person/Suggestions?q={WebUtility.UrlEncode(keywords)}");
         response.EnsureSuccessStatusCode();
         var data = await response.Content.ReadFromJsonAsync<IEnumerable<SearchPersonModel>>();
         Assert.True(data!.Any());

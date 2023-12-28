@@ -1,4 +1,5 @@
 ﻿using AlphaIdPlatform;
+using AlphaIdPlatform.Security;
 using IdSubjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -75,7 +76,7 @@ public class PersonController : ControllerBase
                 .Where(p => p.PersonName.SearchHint!.StartsWith(q))
                 .OrderBy(p => p.PersonName.SearchHint!.Length)
                 .ThenBy(p => p.PersonName.SearchHint)
-                .Take(10);
+                .Take(10).ToHashSet();
             set.UnionWith(pinyinSearchSet);
         }
 
@@ -85,7 +86,7 @@ public class PersonController : ControllerBase
                 .Where(p => p.UserName.StartsWith(q))
                 .OrderBy(p => p.UserName.Length)
                 .ThenBy(p => p.UserName)
-                .Take(10);
+                .Take(10).ToHashSet();
             set.UnionWith(userNameSearchSet);
         }
 
@@ -93,7 +94,7 @@ public class PersonController : ControllerBase
             .Where(p => p.PersonName.FullName.StartsWith(q))
             .OrderBy(p => p.PersonName.FullName.Length)
             .ThenBy(p => p.PersonName.FullName)
-            .Take(10);
+            .Take(10).ToHashSet();
         set.UnionWith(nameSearchSet);
 
 
@@ -103,17 +104,25 @@ public class PersonController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// 获取指定用户的组织成员身份。
+    /// </summary>
+    /// <param name="userName">用户名。</param>
+    /// <returns></returns>
     [HttpGet("{userName}/Memberships")]
-    public async Task<IEnumerable<MembershipModel>> GetMemberships(string userName)
+    public async Task<ActionResult<IEnumerable<MembershipModel>>> GetMemberships(string userName)
     {
-        //todo 从令牌确定访问者。
+        NaturalPerson? visitor = default;
+        var visitorSubjectId = this.User.SubjectId();
+        if (visitorSubjectId != null)
+            visitor = await this.personManager.FindByIdAsync(this.User.SubjectId()!);
 
         var person = await this.personManager.FindByNameAsync(userName);
-        if(person == null)
-            return Enumerable.Empty<MembershipModel>();
+        if (person == null)
+            return new ActionResult<IEnumerable<MembershipModel>>(Enumerable.Empty<MembershipModel>());
 
-        var members = this.memberManager.GetVisibleMembersOf(person, null);
-        return members.Select(m => new MembershipModel(m));
+        var members = this.memberManager.GetVisibleMembersOf(person, visitor);
+        return new ActionResult<IEnumerable<MembershipModel>>(members.Select(m => new MembershipModel(m)));
     }
 
     /// <summary>

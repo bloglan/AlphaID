@@ -34,7 +34,7 @@ public class OrganizationControllerTest
         var response = await client.GetAsync("/api/Organization/a7be43af-8b49-450e-a600-90a8748e48a5/Members");
         response.EnsureSuccessStatusCode();
 
-        var data = await response.Content.ReadFromJsonAsync<MembershipModel[]>();
+        var data = await response.Content.ReadFromJsonAsync<IEnumerable<MembershipModel>>();
         Assert.NotEmpty(data!);
     }
 
@@ -42,10 +42,10 @@ public class OrganizationControllerTest
     public async Task SearchWillExcludeDisabledOrgs()
     {
         var client = this.factory.CreateAuthenticatedClient();
-        var response = await client.GetAsync($"/api/Organization/Search/{WebUtility.UrlEncode("改名后的有限公司")}");
+        var response = await client.GetAsync($"/api/Organization/Suggestions?q={WebUtility.UrlEncode("改名后的有限公司")}");
         response.EnsureSuccessStatusCode();
-        var json = await response.Content.ReadFromJsonAsync<OrganizationSearchResult>();
-        Assert.DoesNotContain(json!.Organizations, p => p.Name.Contains("改名后的有限公司"));
+        var json = await response.Content.ReadFromJsonAsync<IEnumerable<OrganizationModel>>();
+        Assert.Empty(json!);
     }
 
     internal record OrganizationModel(string? Domicile, string? Contact, string? LegalPersonName, DateTime? Expires)

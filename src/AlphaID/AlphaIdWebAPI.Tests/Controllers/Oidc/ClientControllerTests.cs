@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
 using Xunit;
 
 namespace AlphaIdWebAPI.Tests.Controllers.Oidc;
@@ -21,7 +22,9 @@ public class ClientControllerTests
 
         var response = await client.GetAsync($"api/Oidc/Client/d70700eb-c4d8-4742-a79a-6ecf2064b27c");
         response.EnsureSuccessStatusCode();
-        Assert.Equal("Alpha ID Management Center", await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientModel>();
+        Assert.Equal("Alpha ID Management Center", result!.Name);
     }
 
     [Fact]
@@ -32,4 +35,6 @@ public class ClientControllerTests
         var response = await client.GetAsync($"api/Oidc/Client/non-exists-client-id");
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+
+    public record ClientModel(string Name);
 }
