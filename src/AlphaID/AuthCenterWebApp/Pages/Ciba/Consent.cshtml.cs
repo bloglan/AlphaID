@@ -27,18 +27,19 @@ public class Consent : PageModel
         this.logger = logger;
     }
 
-    public ViewModel? View { get; set; }
+    public ViewModel View { get; set; } = default!;
 
     [BindProperty]
     public InputModel Input { get; set; } = default!;
 
     public async Task<IActionResult> OnGet(string id)
     {
-        this.View = await this.BuildViewModelAsync(id);
-        if (this.View == null)
+        var viewModel = await this.BuildViewModelAsync(id);
+        if (viewModel == null)
         {
-            return this.RedirectToPage("/Home/Error/LoginModel");
+            return this.RedirectToPage("/Home/Error/Index");
         }
+        this.View = viewModel;
 
         this.Input = new InputModel
         {
